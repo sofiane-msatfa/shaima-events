@@ -1,0 +1,14 @@
+version: '3.8'
+volumes:
+  mongo-data:
+services:
+  mongodb:
+    image: mongo:7.0-jammy
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongoadmin
+      - MONGO_INITDB_ROOT_PASSWORD=m0ng0adm1n
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
