@@ -8,8 +8,9 @@ const BOOLEAN = z.enum(["true", "false"]).transform((s) => s === "true");
 export const env = createEnv({
   server: {
     PORT: NUMBER.int().default(3000),
-    // MONGODB_URI: STRING.url(),
+    MONGODB_URI: STRING.url(),
     ENABLE_SWAGGER: BOOLEAN.default("false"),
+    JWT_SECRET: STRING
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,

@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import { Container, type interfaces } from "inversify";
 
 export const container = new Container();
