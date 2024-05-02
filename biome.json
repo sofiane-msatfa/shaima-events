@@ -14,5 +14,10 @@
     "rules": {
       "recommended": true
     }
+  },
+  "javascript": {
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    }
   }
 }
