@@ -8,6 +8,9 @@ import { eventRequestSchema } from "@/domain/dto/event-request.js";
 import { getUserLightFromRequest } from "@/utils/express.js";
 import { Types } from "mongoose";
 import { AuthenticationError } from "@/domain/error/authentication-error.js";
+import type { PaginatedResult } from "@/domain/entity/pagination-result.js";
+import { paginate } from "@/utils/pagination.js";
+import type { Event } from "@/domain/entity/event.js";
 
 @injectable()
 export class EventController {
@@ -15,6 +18,9 @@ export class EventController {
     private readonly eventRepository!: EventRepository;
 
     public getEvents: RequestHandler = async (req, res, next) => {
+        const page = parseInt(req.query.page as string) || 1;
+        const pageSize = parseInt(req.query.pageSize as string) || 10;
+
         const events = await ResultAsync.fromPromise(
             this.eventRepository.findAll(),
             (error) => error,
@@ -24,7 +30,13 @@ export class EventController {
             return res.status(HttpCode.INTERNAL_SERVER_ERROR).json(events.error);
         }
 
-        res.status(HttpCode.OK).json(events.value);
+        const paginatedResult: PaginatedResult<Event> = paginate(
+            events.value,
+            page,
+            pageSize
+        );
+
+        res.status(HttpCode.OK).json(paginatedResult);
         next();
     };
 
@@ -77,7 +89,7 @@ export class EventController {
         res.status(HttpCode.NO_CONTENT).send();
     };
 
-    public findEventById: RequestHandler = async (req, res, next) => {
+    public findEventById: RequestHandler = async (req, res) => {
         const { id } = req.params!;
 
         if (!id) return res.status(HttpCode.BAD_REQUEST).json({ message: "Id is required" });
@@ -98,7 +110,10 @@ export class EventController {
         res.status(HttpCode.OK).json(event.value);
     }
 
-    public findAllFromAuthorId: RequestHandler = async (req, res, next) => {
+    public findAllFromAuthorId: RequestHandler = async (req, res) => {
+        const page = parseInt(req.query.page as string) || 1;
+        const pageSize = parseInt(req.query.pageSize as string) || 10;
+
         const currentUser = getUserLightFromRequest(req);
 
         const authorId = new Types.ObjectId(currentUser.id);
@@ -109,7 +124,11 @@ export class EventController {
         );
 
         if (events.isErr()) { return res.status(HttpCode.INTERNAL_SERVER_ERROR).json(events.error); }
-
-        res.status(HttpCode.OK).json(events.value);
+        const paginatedResult: PaginatedResult<Event> = paginate(
+            events.value,
+            page,
+            pageSize
+        );
+        res.status(HttpCode.OK).json(paginatedResult);
     }
 }

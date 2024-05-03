@@ -1,0 +1,311 @@
+{
+	"data": [
+		{
+			"_id": "6634f370bcc1595922b45182",
+			"name": "Fête sur la Plage",
+			"description": "Une journée de détente, de musique et de plaisir sur la plage",
+			"category": "Party",
+			"location": "Plage Soleil",
+			"startTime": "2024-08-15T00:00:00.000Z",
+			"endTime": "2024-08-15T00:00:00.000Z",
+			"author": "6634eaef9c7ac27a2d064d42",
+			"participants": [
+				"6634ecf708b92a0053fac7a9",
+				"6634ecf708b92a0053fac7aa",
+				"6634ecf708b92a0053fac7ab"
+			],
+			"tags": [
+				"plage",
+				"fête",
+				"musique"
+			],
+			"medias": [
+				"https://example.com/image5.jpg",
+				"https://example.com/video5.mp4"
+			],
+			"capacity": 800,
+			"artists": [
+				"DJ A",
+				"Live Band B"
+			],
+			"createdAt": "2024-05-03T14:23:44.928Z",
+			"updatedAt": "2024-05-03T14:23:44.928Z",
+			"__v": 0
+		},
+		{
+			"_id": "6634f78f34b4c0dcff7fb34a",
+			"name": "Exposition d'Art Contemporain",
+			"description": "Une exposition mettant en vedette des œuvres d'artistes contemporains locaux",
+			"category": "Party",
+			"location": "Galerie d'Art Moderne",
+			"startTime": "2024-09-01T00:00:00.000Z",
+			"endTime": "2024-09-30T00:00:00.000Z",
+			"author": "6634ecf708b92a0053fac7a8",
+			"participants": [],
+			"tags": [
+				"Party",
+				"Festival"
+			],
+			"medias": [
+				"https://example.com/image6.jpg"
+			],
+			"capacity": 150,
+			"artists": [
+				"Artistes Locaux"
+			],
+			"createdAt": "2024-05-03T14:41:19.297Z",
+			"updatedAt": "2024-05-03T14:41:19.297Z",
+			"__v": 0
+		},
+		{
+			"_id": "6634ff0819b79f78126ae6a9",
+			"name": "Concert de Jazz au Jardin",
+			"description": "Une soirée de jazz sous les étoiles dans un cadre paisible",
+			"category": "Concert",
+			"location": "Jardin Botanique",
+			"startTime": "2024-06-10T00:00:00.000Z",
+			"endTime": "2024-06-10T00:00:00.000Z",
+			"author": "6634eaef9c7ac27a2d064d42",
+			"participants": [
+				"6634ecf708b92a0053fac7a8",
+				"6634ecf708b92a0053fac7a9"
+			],
+			"tags": [
+				"jazz",
+				"musique",
+				"soirée"
+			],
+			"medias": [
+				"https://example.com/image2.jpg",
+				"https://example.com/video2.mp4"
+			],
+			"capacity": 300,
+			"artists": [
+				"Jazz Band X",
+				"Artiste Y"
+			],
+			"createdAt": "2024-05-03T15:13:12.959Z",
+			"updatedAt": "2024-05-03T15:13:12.959Z",
+			"__v": 0
+		},
+		{
+			"_id": "6634ff0b19b79f78126ae6ab",
+			"name": "Concert de Jazz au Jardin",
+			"description": "Une soirée de jazz sous les étoiles dans un cadre paisible",
+			"category": "Concert",
+			"location": "Jardin Botanique",
+			"startTime": "2024-06-10T00:00:00.000Z",
+			"endTime": "2024-06-10T00:00:00.000Z",
+			"author": "6634eaef9c7ac27a2d064d42",
+			"participants": [
+				"6634ecf708b92a0053fac7a8",
+				"6634ecf708b92a0053fac7a9"
+			],
+			"tags": [
+				"jazz",
+				"musique",
+				"soirée"
+			],
+			"medias": [
+				"https://example.com/image2.jpg",
+				"https://example.com/video2.mp4"
+			],
+			"capacity": 300,
+			"artists": [
+				"Jazz Band X",
+				"Artiste Y"
+			],
+			"createdAt": "2024-05-03T15:13:15.228Z",
+			"updatedAt": "2024-05-03T15:13:15.228Z",
+			"__v": 0
+		},
+		{
+			"_id": "6634ff0b19b79f78126ae6ad",
+			"name": "Concert de Jazz au Jardin",
+			"description": "Une soirée de jazz sous les étoiles dans un cadre paisible",
+			"category": "Concert",
+			"location": "Jardin Botanique",
+			"startTime": "2024-06-10T00:00:00.000Z",
+			"endTime": "2024-06-10T00:00:00.000Z",
+			"author": "6634eaef9c7ac27a2d064d42",
+			"participants": [
+				"6634ecf708b92a0053fac7a8",
+				"6634ecf708b92a0053fac7a9"
+			],
+			"tags": [
+				"jazz",
+				"musique",
+				"soirée"
+			],
+			"medias": [
+				"https://example.com/image2.jpg",
+				"https://example.com/video2.mp4"
+			],
+			"capacity": 300,
+			"artists": [
+				"Jazz Band X",
+				"Artiste Y"
+			],
+			"createdAt": "2024-05-03T15:13:15.932Z",
+			"updatedAt": "2024-05-03T15:13:15.932Z",
+			"__v": 0
+		},
+		{
+			"_id": "6634ff0c19b79f78126ae6af",
+			"name": "Concert de Jazz au Jardin",
+			"description": "Une soirée de jazz sous les étoiles dans un cadre paisible",
+			"category": "Concert",
+			"location": "Jardin Botanique",
+			"startTime": "2024-06-10T00:00:00.000Z",
+			"endTime": "2024-06-10T00:00:00.000Z",
+			"author": "6634eaef9c7ac27a2d064d42",
+			"participants": [
+				"6634ecf708b92a0053fac7a8",
+				"6634ecf708b92a0053fac7a9"
+			],
+			"tags": [
+				"jazz",
+				"musique",
+				"soirée"
+			],
+			"medias": [
+				"https://example.com/image2.jpg",
+				"https://example.com/video2.mp4"
+			],
+			"capacity": 300,
+			"artists": [
+				"Jazz Band X",
+				"Artiste Y"
+			],
+			"createdAt": "2024-05-03T15:13:16.615Z",
+			"updatedAt": "2024-05-03T15:13:16.615Z",
+			"__v": 0
+		},
+		{
+			"_id": "6634ff0d19b79f78126ae6b1",
+			"name": "Concert de Jazz au Jardin",
+			"description": "Une soirée de jazz sous les étoiles dans un cadre paisible",
+			"category": "Concert",
+			"location": "Jardin Botanique",
+			"startTime": "2024-06-10T00:00:00.000Z",
+			"endTime": "2024-06-10T00:00:00.000Z",
+			"author": "6634eaef9c7ac27a2d064d42",
+			"participants": [
+				"6634ecf708b92a0053fac7a8",
+				"6634ecf708b92a0053fac7a9"
+			],
+			"tags": [
+				"jazz",
+				"musique",
+				"soirée"
+			],
+			"medias": [
+				"https://example.com/image2.jpg",
+				"https://example.com/video2.mp4"
+			],
+			"capacity": 300,
+			"artists": [
+				"Jazz Band X",
+				"Artiste Y"
+			],
+			"createdAt": "2024-05-03T15:13:17.327Z",
+			"updatedAt": "2024-05-03T15:13:17.327Z",
+			"__v": 0
+		},
+		{
+			"_id": "6634ff0d19b79f78126ae6b3",
+			"name": "Concert de Jazz au Jardin",
+			"description": "Une soirée de jazz sous les étoiles dans un cadre paisible",
+			"category": "Concert",
+			"location": "Jardin Botanique",
+			"startTime": "2024-06-10T00:00:00.000Z",
+			"endTime": "2024-06-10T00:00:00.000Z",
+			"author": "6634eaef9c7ac27a2d064d42",
+			"participants": [
+				"6634ecf708b92a0053fac7a8",
+				"6634ecf708b92a0053fac7a9"
+			],
+			"tags": [
+				"jazz",
+				"musique",
+				"soirée"
+			],
+			"medias": [
+				"https://example.com/image2.jpg",
+				"https://example.com/video2.mp4"
+			],
+			"capacity": 300,
+			"artists": [
+				"Jazz Band X",
+				"Artiste Y"
+			],
+			"createdAt": "2024-05-03T15:13:17.936Z",
+			"updatedAt": "2024-05-03T15:13:17.936Z",
+			"__v": 0
+		},
+		{
+			"_id": "6634ff0e19b79f78126ae6b5",
+			"name": "Concert de Jazz au Jardin",
+			"description": "Une soirée de jazz sous les étoiles dans un cadre paisible",
+			"category": "Concert",
+			"location": "Jardin Botanique",
+			"startTime": "2024-06-10T00:00:00.000Z",
+			"endTime": "2024-06-10T00:00:00.000Z",
+			"author": "6634eaef9c7ac27a2d064d42",
+			"participants": [
+				"6634ecf708b92a0053fac7a8",
+				"6634ecf708b92a0053fac7a9"
+			],
+			"tags": [
+				"jazz",
+				"musique",
+				"soirée"
+			],
+			"medias": [
+				"https://example.com/image2.jpg",
+				"https://example.com/video2.mp4"
+			],
+			"capacity": 300,
+			"artists": [
+				"Jazz Band X",
+				"Artiste Y"
+			],
+			"createdAt": "2024-05-03T15:13:18.544Z",
+			"updatedAt": "2024-05-03T15:13:18.544Z",
+			"__v": 0
+		},
+		{
+			"_id": "6634ff0f19b79f78126ae6b7",
+			"name": "Concert de Jazz au Jardin",
+			"description": "Une soirée de jazz sous les étoiles dans un cadre paisible",
+			"category": "Concert",
+			"location": "Jardin Botanique",
+			"startTime": "2024-06-10T00:00:00.000Z",
+			"endTime": "2024-06-10T00:00:00.000Z",
+			"author": "6634eaef9c7ac27a2d064d42",
+			"participants": [
+				"6634ecf708b92a0053fac7a8",
+				"6634ecf708b92a0053fac7a9"
+			],
+			"tags": [
+				"jazz",
+				"musique",
+				"soirée"
+			],
+			"medias": [
+				"https://example.com/image2.jpg",
+				"https://example.com/video2.mp4"
+			],
+			"capacity": 300,
+			"artists": [
+				"Jazz Band X",
+				"Artiste Y"
+			],
+			"createdAt": "2024-05-03T15:13:19.230Z",
+			"updatedAt": "2024-05-03T15:13:19.230Z",
+			"__v": 0
+		}
+	],
+	"totalCount": 27,
+	"totalPages": 3
+}
