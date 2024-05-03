@@ -4,6 +4,7 @@ import { HttpCode } from "@/domain/enum/http-code.js";
 import { userRouter } from "./user-router.js";
 import { authRouter } from "./auth-router.js";
 import { isAuthenticated } from "../middleware/auth.js";
+import { getUserLightFromRequest } from "@/utils/express.js";
 import { eventRouter } from "./event-routes.js";
 
 export function registerEndpoints(app: Express): void {
@@ -21,7 +22,7 @@ export function registerEndpoints(app: Express): void {
   app.use("/events", eventRouter());
 
   app.get("/protected", isAuthenticated, (req, res) => {
-    const user = JSON.parse(req.headers.user as string);
+    const user = getUserLightFromRequest(req);
     res.json({ message: "Protected route", user });
   });
 

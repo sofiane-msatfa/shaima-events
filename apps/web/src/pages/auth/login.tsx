@@ -3,20 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginRequestSchema, type LoginRequest } from "@/dtos/login-request";
 import { useAuth } from "@/contexts/auth/use-auth";
 import { useRouter } from "@/hooks/use-router";
-import { useEffect } from "react";
 
 Component.displayName = "LoginPage";
 
 export function Component() {
   const auth = useAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    console.log("LoginPage mounted");
-    return () => {
-      console.log("LoginPage unmounted");
-    };
-  });
 
   const {
     register,

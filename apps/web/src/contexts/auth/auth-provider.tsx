@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { AuthContext, type AuthContextType } from "./auth-context";
 import api, { setAccessTokenInterceptor } from "@/utils/api";
+import { useQuery } from "@tanstack/react-query";
 import type { LoginRequest } from "@/dtos/login-request";
 import type { RegisterRequest } from "@/dtos/register-request";
 import type { AccessTokenResponse } from "@/dtos/access-token-response";
+import type { UserLight } from "@/dtos/user-light";
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -14,6 +16,15 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
     return localStorage.getItem("access_token");
   });
   const isAuthenticated = !!accessToken;
+
+  const { data: user } = useQuery({
+    queryKey: ["me"],
+    queryFn: async () => {
+      const response = await api.get<UserLight>("/users/me");
+      return response.data;
+    },
+    enabled: isAuthenticated,
+  })
 
   useEffect(() => {
     if (accessToken) {
@@ -51,8 +62,9 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
       register,
       login,
       logout,
+      user: user || null,
     }),
-    [isAuthenticated, accessToken, register, login, logout],
+    [isAuthenticated, accessToken, user, register, login, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

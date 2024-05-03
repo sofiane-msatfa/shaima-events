@@ -124,7 +124,7 @@ export class AuthController {
           .status(HttpCode.INTERNAL_SERVER_ERROR)
           .send("User creation failed");
       case AuthenticationError.TokenExpired:
-        return res.status(HttpCode.UNAUTHORIZED).send("Unauthorized");
+        return res.status(HttpCode.UNAUTHORIZED).send("TokenExpired");
       case AuthenticationError.InvalidRefreshToken:
         return res.status(HttpCode.UNAUTHORIZED).send("Unauthorized");
     }

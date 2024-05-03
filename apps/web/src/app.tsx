@@ -18,15 +18,15 @@ export default function App() {
   };
 
   return (
-    <AuthContextProvider>
-      <SettingsContextProvider defaultSettings={defaultSettings}>
-        <ThemeProvider>
-          <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <AuthContextProvider>
+        <SettingsContextProvider defaultSettings={defaultSettings}>
+          <ThemeProvider>
             <RouterProvider router={router} />
             <ReactQueryDevtools />
-          </QueryClientProvider>
-        </ThemeProvider>
-      </SettingsContextProvider>
-    </AuthContextProvider>
+          </ThemeProvider>
+        </SettingsContextProvider>
+      </AuthContextProvider>
+    </QueryClientProvider>
   );
 }

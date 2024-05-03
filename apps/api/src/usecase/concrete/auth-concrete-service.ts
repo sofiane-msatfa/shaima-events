@@ -44,8 +44,9 @@ export class AuthConcreteService implements AuthService {
       return errAsync(AuthenticationError.Unauthorized);
     }
 
-    const userLight = this.mapEntityToDto(user);
+    const userLight = this.toUserLight(user);
     const authtokens = await this.generateAuthTokens(userLight);
+
 
     await stall(stallTime, timeStart);
     return okAsync(authtokens);
@@ -117,7 +118,7 @@ export class AuthConcreteService implements AuthService {
     return { accessToken, refreshToken };
   }
 
-  private mapEntityToDto(user: User): UserLight {
+  private toUserLight(user: User): UserLight {
     return {
       id: user.id,
       email: user.email,
