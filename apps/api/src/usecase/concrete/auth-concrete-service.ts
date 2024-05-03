@@ -6,7 +6,7 @@ import type { UserRepository } from "@/domain/repository/user-repository.js";
 import type { AuthService } from "@/domain/service/auth-service.js";
 
 import argon2 from "argon2";
-import { inject } from "inversify";
+import { inject, injectable } from "inversify";
 import { performance } from "node:perf_hooks";
 import { ResultAsync, errAsync, okAsync } from "neverthrow";
 import { IDENTIFIER } from "@/dependency/identifiers.js";
@@ -18,6 +18,7 @@ import {
   verifyRefreshToken,
 } from "@/utils/jwt.js";
 
+@injectable()
 export class AuthConcreteService implements AuthService {
   @inject(IDENTIFIER.UserRepository)
   private readonly userRepository!: UserRepository;
@@ -52,7 +53,7 @@ export class AuthConcreteService implements AuthService {
 
   async register(
     user: RegisterRequest,
-  ): Promise<ResultAsync<AuthTokens, AuthenticationError>> {
+  ): Promise<ResultAsync<void, AuthenticationError>> {
     const existingUser = await this.userRepository.findByEmail(user.email);
 
     if (existingUser) {
@@ -72,10 +73,7 @@ export class AuthConcreteService implements AuthService {
       return errAsync(AuthenticationError.UserCreationFailed);
     }
 
-    const userLight = this.mapEntityToDto(creationResult.value);
-    const authTokens = await this.generateAuthTokens(userLight);
-
-    return okAsync(authTokens);
+    return okAsync(void 0);
   }
 
   async refreshAuthTokens(

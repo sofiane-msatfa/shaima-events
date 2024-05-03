@@ -10,7 +10,7 @@ export interface AuthService {
   ): Promise<ResultAsync<AuthTokens, AuthenticationError>>;
   register(
     user: RegisterRequest,
-  ): Promise<ResultAsync<AuthTokens, AuthenticationError>>;
+  ): Promise<ResultAsync<void, AuthenticationError>>;
   refreshAuthTokens(
     refreshToken: string,
   ): Promise<ResultAsync<AuthTokens, AuthenticationError>>

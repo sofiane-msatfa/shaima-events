@@ -28,7 +28,7 @@ export const isAuthenticated: RequestHandler = (req, res, next) => {
       .send(AuthenticationError.AuthorizationNotFound);
   }
 
-  //   req.headers.user = JSON.stringify(result.value);
+    req.headers.user = JSON.stringify(result.value);
 
   return next();
 };

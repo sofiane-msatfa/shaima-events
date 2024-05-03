@@ -51,31 +51,31 @@ export class AuthController {
       return next();
     }
 
-    const { accessToken, refreshToken } = authPayload.value;
-
-    this.setRefreshTokenCookie(res, refreshToken);
-    res.status(HttpCode.CREATED).json({ accessToken });
+    res.status(HttpCode.CREATED).send("User created");
   });
 
-  public refreshTokens: RequestHandler = asyncHandler(async (req, res, next) => {
-    const refreshToken = req.cookies.refreshToken;
+  public refreshTokens: RequestHandler = asyncHandler(
+    async (req, res, next) => {
+      const refreshToken = req.cookies.refreshToken;
 
-    if (!refreshToken) {
-      return res.status(HttpCode.BAD_REQUEST).send("Refresh token not found");
-    }
+      if (!refreshToken) {
+        return res.status(HttpCode.BAD_REQUEST).send("Refresh token not found");
+      }
 
-    const authPayload = await this.authService.refreshAuthTokens(refreshToken);
+      const authPayload =
+        await this.authService.refreshAuthTokens(refreshToken);
 
-    if (authPayload.isErr()) {
-      this.handleAuthenticationError(authPayload.error, res);
-      return next();
-    }
+      if (authPayload.isErr()) {
+        this.handleAuthenticationError(authPayload.error, res);
+        return next();
+      }
 
-    const { accessToken, refreshToken: newRefreshToken } = authPayload.value;
+      const { accessToken, refreshToken: newRefreshToken } = authPayload.value;
 
-    this.setRefreshTokenCookie(res, newRefreshToken);
-    res.status(HttpCode.OK).json({ accessToken });
-  });
+      this.setRefreshTokenCookie(res, newRefreshToken);
+      res.status(HttpCode.OK).json({ accessToken });
+    },
+  );
 
   public logout = asyncHandler(async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
@@ -90,14 +90,17 @@ export class AuthController {
     res.status(HttpCode.OK).send("Logged out");
   });
 
-  private setRefreshTokenCookie = (res: Response, refreshToken: string): void => {
+  private setRefreshTokenCookie = (
+    res: Response,
+    refreshToken: string,
+  ): void => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "lax",
       maxAge: env.REFRESH_TOKEN_EXPIRATION_IN_MS,
     });
-  }
+  };
 
   private handleAuthenticationError = (
     error: AuthenticationError,

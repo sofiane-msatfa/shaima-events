@@ -7,8 +7,8 @@ export function authRouter(): Router {
   const router = Router();
   const controller = getInstance(AuthController);
 
-  router.get("/login", controller.login);
-  router.get("/register", controller.register);
+  router.post("/login", controller.login);
+  router.post("/register", controller.register);
   router.post("/refresh", controller.refreshTokens);
   router.post("/logout", controller.logout);
 
