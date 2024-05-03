@@ -7,7 +7,7 @@ interface EventDocument extends Document {
   name: string;
   description?: string;
   category: EventCategory;
-  location: Types.ObjectId;
+  location: string;
   startTime: Date;
   endTime: Date;
   author: Types.ObjectId;
@@ -27,11 +27,7 @@ const eventSchema = new Schema<EventDocument>(
       enum: Object.values(EventCategory),
       required: true,
     },
-    location: {
-      type: SchemaTypes.ObjectId,
-      ref: Collection.Location,
-      required: true,
-    },
+    location: { type: String, required: false },
     startTime: { type: Date, required: true },
     endTime: { type: Date, required: true },
     author: {
