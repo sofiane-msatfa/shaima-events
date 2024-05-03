@@ -1,7 +1,7 @@
 import type { RegisterRequest } from "@/domain/dto/register-request.js";
 import type { User } from "@/domain/entity/user.js";
 import type { UserRepository } from "@/domain/repository/user-repository.js";
-import UserModel from "../model/user.js";
+import UserModel, { type UserDocument } from "../model/user.js";
 import RefreshTokenModel from "../model/refresh-token.js";
 import { injectable } from "inversify";
 import { env } from "@/env.js";
@@ -17,13 +17,13 @@ export class UserMongoRepository implements UserRepository {
   async findById(id: string): Promise<User | null> {
     const user = await UserModel.findById(id);
     if (!user) return null;
-    return user.toJSON();
+    return this.toUserEntity(user);
   }
 
   async findByEmail(email: string): Promise<User | null> {
     const user = await UserModel.findOne({ email });
     if (!user) return null;
-    return user.toJSON();
+    return this.toUserEntity(user);
   }
 
   async delete(id: string): Promise<void> {
@@ -32,7 +32,7 @@ export class UserMongoRepository implements UserRepository {
 
   async findAll(): Promise<User[]> {
     const users = await UserModel.find();
-    return users.map((user) => user.toJSON());
+    return users.map((user) => this.toUserEntity(user));
   }
 
   async update(id: string, user: Partial<User>): Promise<User | null> {
@@ -40,16 +40,25 @@ export class UserMongoRepository implements UserRepository {
       new: true,
     });
     if (!updatedUser) return null;
-    return updatedUser.toJSON();
+    return this.toUserEntity(updatedUser);
   }
 
-  async findRefreshToken(userId: string, refreshToken: string): Promise<RefreshToken | null> {
-    const token = await RefreshTokenModel.findOne({ userId, token: refreshToken });
+  async findRefreshToken(
+    userId: string,
+    refreshToken: string,
+  ): Promise<RefreshToken | null> {
+    const token = await RefreshTokenModel.findOne({
+      userId,
+      token: refreshToken,
+    });
     if (!token) return null;
     return token.toJSON();
   }
 
-  async createRefreshToken(userId: string, refreshToken: string): Promise<void> {
+  async createRefreshToken(
+    userId: string,
+    refreshToken: string,
+  ): Promise<void> {
     await RefreshTokenModel.create({
       userId,
       token: refreshToken,
@@ -59,5 +68,17 @@ export class UserMongoRepository implements UserRepository {
 
   async deleteRefreshToken(refreshToken: string): Promise<void> {
     await RefreshTokenModel.findOneAndDelete({ token: refreshToken });
+  }
+
+  private toUserEntity(user: UserDocument): User {
+    return {
+      id: user._id.toString(),
+      email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      password: user.password,
+      deletedAt: user.deletedAt,
+      events: user.events?.map((event) => event.toString()),
+    };
   }
 }
