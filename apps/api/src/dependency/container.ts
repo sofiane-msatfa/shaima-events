@@ -13,3 +13,7 @@ export function bindIdentifier<T>(
 export function bindSelf<T>(instance: interfaces.Newable<T>) {
   container.bind(instance).toSelf().inSingletonScope();
 }
+
+export function getInstance<T>(identifier: interfaces.ServiceIdentifier<T>): T {
+  return container.get(identifier);
+}
