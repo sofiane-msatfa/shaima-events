@@ -27,6 +27,11 @@ export class EventMongoRepository implements EventRepository {
         return event.toJSON();
     }
 
+    async findAllByAuthorId(authorId: Types.ObjectId): Promise<Event[]> {
+        const events = await EventModel.find({ author: authorId });
+        return events.map((event) => event.toJSON());
+    }
+
     async update(id: string, event: Partial<Event>): Promise<Event | null> {
         const updatedEvent = await EventModel.findByIdAndUpdate(id, event, {
             new: true,

@@ -10,8 +10,10 @@ export function eventRouter(): Router {
   const controller = getInstance(EventController);
 
   router.get("/", controller.getEvents);
+  router.get("/me", isAuthenticated, controller.findAllFromAuthorId);
   router.post("/", isAuthenticated, controller.createEvent);
   router.delete("/:id", isAuthenticated, controller.deleteEvent);
+  router.get("/:id", isAuthenticated, controller.findEventById);
   
   return router;
 }

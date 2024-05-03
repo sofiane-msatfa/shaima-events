@@ -7,5 +7,6 @@ export interface EventRepository {
   delete(id: string): Promise<void>;
   findAll(): Promise<Event[]>;
   findById(id: string): Promise<Event | null>;
+  findAllByAuthorId(authorId: Types.ObjectId): Promise<Event[]>;
   update(id: string, event: Partial<Event>): Promise<Event | null>;
 }
