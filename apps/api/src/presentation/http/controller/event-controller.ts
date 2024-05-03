@@ -7,6 +7,9 @@ import type { RequestHandler, Response } from "express";
 import type { EventRepository } from "@/domain/repository/event-repository.js";
 import { eventRequestSchema } from "@/domain/dto/event-request.js";
 import { verifyAccessToken } from "@/utils/jwt.js";
+import { getUserLightFromRequest } from "@/utils/express.js";
+import { Types } from "mongoose";
+import { AuthenticationError } from "@/domain/error/authentication-error.js";
 
 @injectable()
 export class EventController {
@@ -28,15 +31,17 @@ export class EventController {
     };
 
     public createEvent: RequestHandler = async (req, res, next) => {
-        console.log((req.headers.cookie!));
         const validation = eventRequestSchema.safeParse(req.body);
+       
+        const currentUser = getUserLightFromRequest(req);
 
         if (!validation.success) {
             return res.status(HttpCode.BAD_REQUEST).json(validation.error);
         }
+        const authorId = new Types.ObjectId(currentUser.id);
         
         const newEvent = await ResultAsync.fromPromise(
-            this.eventRepository.create(validation.data),
+            this.eventRepository.create(validation.data, authorId),
             (error) => error,
         );
 
@@ -45,6 +50,29 @@ export class EventController {
         }
 
         res.status(HttpCode.CREATED).json(newEvent.value);
-        next();
+    };
+
+    public deleteEvent: RequestHandler = async (req, res, next) => {
+        const { id } = req.params;
+        const currentUser = getUserLightFromRequest(req);
+
+        if(!id) return res.status(HttpCode.BAD_REQUEST).json({ message: "Id is required" });
+
+        const event = await this.eventRepository.findById(id);
+
+        if(!event) return res.status(HttpCode.NOT_FOUND).json("Error");
+
+        if(event.author.toString() !== currentUser.id) return res.status(HttpCode.FORBIDDEN).json(AuthenticationError.Unauthorized);
+
+        const deletedEvent = await ResultAsync.fromPromise(
+            this.eventRepository.delete(id),
+            (error) => error,
+        );
+
+        if (deletedEvent.isErr()) {
+            return res.status(HttpCode.INTERNAL_SERVER_ERROR).json(deletedEvent.error);
+        }
+
+        res.status(HttpCode.NO_CONTENT).send();
     };
 }

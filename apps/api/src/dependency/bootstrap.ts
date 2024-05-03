@@ -7,10 +7,11 @@ import { AuthConcreteService } from "@/usecase/concrete/auth-concrete-service.js
 import { UserMemoryRepository } from "@/infrastructure/database/memory/user-memory-repository.js";
 import { EventMongoRepository } from "@/infrastructure/database/mongo/repository/event-mongo-repository.js";
 import { EventController } from "@/presentation/http/controller/event-controller.js";
+import { UserMongoRepository } from "@/infrastructure/database/mongo/repository/user-mongo-repository.js";
 
 export function bindDependencies(): void {
-  // bindIdentifier(IDENTIFIER.UserRepository, UserMongoRepository);
-  bindIdentifier(IDENTIFIER.UserRepository, UserMemoryRepository);
+  bindIdentifier(IDENTIFIER.UserRepository, UserMongoRepository);
+  // bindIdentifier(IDENTIFIER.UserRepository, UserMemoryRepository);
   bindIdentifier(IDENTIFIER.AuthService, AuthConcreteService);
   bindIdentifier(IDENTIFIER.EventRepository, EventMongoRepository);
   bindSelf(UserController);

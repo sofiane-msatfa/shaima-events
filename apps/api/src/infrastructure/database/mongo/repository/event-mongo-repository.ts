@@ -2,12 +2,13 @@ import { injectable } from "inversify";
 import type { EventRepository } from "@/domain/repository/event-repository.js";
 import type { EventRequest } from "@/domain/dto/event-request.js";
 import EventModel from "../model/event.js";
+import type { Types } from "mongoose";
+import type { Event } from "@/domain/entity/event.js";
 
 @injectable()
 export class EventMongoRepository implements EventRepository {
-    async create(event: EventRequest): Promise<Event> {
-        console.log(event)
-        const newEvent = await EventModel.create(event);
+    async create(event: EventRequest, authorId: Types.ObjectId): Promise<Event> {
+        const newEvent = await EventModel.create({...event, author: authorId});
         return newEvent.toJSON();
     }
 
