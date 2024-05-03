@@ -1,9 +1,12 @@
 import { useAuth } from "@/contexts/auth/use-auth";
 import { Link } from "react-router-dom";
 import api from "@/utils/api";
+import { useSettings } from "@/contexts/settings/use-settings";
+import { Typography, Button } from "@mui/material";
 
 export default function Home() {
   const { isAuthenticated, logout } = useAuth();
+  const settings = useSettings();
 
   const fetchProtectedMessage = async () => {
     const response = await api.get("/protected");
@@ -25,16 +28,21 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Home Page</h1>
-      <p>Welcome to the home page!</p>
+      <Typography component="h1" variant="h1">
+        Home Page
+      </Typography>
+      <Typography>Welcome to the home page!</Typography>
+      <Button type="button" onClick={() => settings.toggleThemeMode()}>
+        Toggle Theme Mode
+      </Button>
       {isAuthenticated ? (
         <>
-          <button type="button" onClick={fetchProtectedMessage}>
+          <Button type="button" onClick={fetchProtectedMessage}>
             Fetch Protected Message
-          </button>
-          <button type="button" onClick={logout}>
+          </Button>
+          <Button type="button" onClick={logout}>
             Logout
-          </button>
+          </Button>
         </>
       ) : (
         <>
