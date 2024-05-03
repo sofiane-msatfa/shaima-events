@@ -131,4 +131,33 @@ export class EventController {
         );
         res.status(HttpCode.OK).json(paginatedResult);
     }
+
+    public updateEvent: RequestHandler = async (req, res) => {
+        const { id } = req.params;
+        const currentUser = getUserLightFromRequest(req);
+
+        if (!id) return res.status(HttpCode.BAD_REQUEST).json({ message: "Id is required" });
+
+        const event = await ResultAsync.fromPromise(
+            this.eventRepository.findById(id),
+            (error) => error,
+        );
+
+        if (event.isErr()) { return res.status(HttpCode.INTERNAL_SERVER_ERROR).json(event.error); }
+
+        if (!event.value) return res.status(HttpCode.NOT_FOUND).json("Error");
+
+        if (event.value.author.toString() !== currentUser.id) return res.status(HttpCode.FORBIDDEN).json(AuthenticationError.Unauthorized);
+
+        const updatedEvent = await ResultAsync.fromPromise(
+            this.eventRepository.update(id, req.body),
+            (error) => error,
+        );
+
+        if (updatedEvent.isErr()) { return res.status(HttpCode.INTERNAL_SERVER_ERROR).json(updatedEvent.error); }
+
+        if (!updatedEvent.value) return res.status(HttpCode.NOT_FOUND).json("Error");
+
+        res.status(HttpCode.OK).json(updatedEvent.value);
+    }
 }
