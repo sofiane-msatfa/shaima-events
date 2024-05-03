@@ -43,6 +43,9 @@ export default function Home() {
           <Button type="button" onClick={logout}>
             Logout
           </Button>
+          <Button type="button" onClick={() => api.post("/auth/refresh")}>
+            Refresh accessToken
+          </Button>
         </>
       ) : (
         <>

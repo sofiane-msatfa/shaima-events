@@ -4,6 +4,7 @@ import { ResultAsync } from "neverthrow";
 import { HttpCode } from "@/domain/enum/http-code.js";
 import type { UserRepository } from "@/domain/repository/user-repository.js";
 import type { RequestHandler, Response } from "express";
+import { getUserLightFromRequest } from "@/utils/express.js";
 
 @injectable()
 export class UserController {
@@ -23,4 +24,9 @@ export class UserController {
     res.status(HttpCode.OK).json(users.value);
     next();
   };
+
+  public getCurrentUser: RequestHandler = async (req, res, next) => {
+    const currentUser = getUserLightFromRequest(req);
+    res.status(HttpCode.OK).json(currentUser);
+  }
 }

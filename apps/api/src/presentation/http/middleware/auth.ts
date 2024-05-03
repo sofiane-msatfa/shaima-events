@@ -2,6 +2,7 @@ import { HttpCode } from "@/domain/enum/http-code.js";
 import type { RequestHandler } from "express";
 import { AuthenticationError } from "@/domain/error/authentication-error.js";
 import { verifyAccessToken } from "@/utils/jwt.js";
+import { LIGHT_USER } from "@/constants.js";
 
 export const isAuthenticated: RequestHandler = (req, res, next) => {
   const identifier = "Bearer ";
@@ -28,7 +29,7 @@ export const isAuthenticated: RequestHandler = (req, res, next) => {
       .send(AuthenticationError.AuthorizationNotFound);
   }
 
-    req.headers.user = JSON.stringify(result.value);
+    req.headers[LIGHT_USER] = JSON.stringify(result.value);
 
   return next();
 };

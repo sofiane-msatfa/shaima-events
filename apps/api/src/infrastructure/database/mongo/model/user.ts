@@ -2,7 +2,7 @@ import { Collection } from "@/domain/enum/collection.js";
 import { Schema, SchemaTypes, model } from "mongoose";
 import type { Types, Document } from "mongoose";
 
-interface UserDocument extends Document {
+export interface UserDocument extends Document {
   firstname: string;
   lastname: string;
   email: string;

@@ -16,6 +16,7 @@ export function setAccessTokenInterceptor(accessToken: string) {
   );
 }
 
+// attention il ne faut pas uniquement se base sur le status car  peut correspondre à d'autres erreurs
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -23,7 +24,12 @@ api.interceptors.response.use(
 
     // If the error status is 401 and there is no originalRequest._retry flag,
     // it means the token has expired and we need to refresh it
-    if (error.response.status === 401 && !originalRequest._retry) {
+    console.log({ axiosError: error.response });
+    if (
+      error.response.status === 401 &&
+      error.response.message === "TokenExpired" &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
 
       try {

@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { bindDependencies } from "@/dependency/bootstrap.js";
 import { registerEndpoints } from "./router/index.js";
+import cookieParser from "cookie-parser";
 
 export async function createExpressApp(): Promise<express.Express> {
   const app = express();
@@ -19,6 +20,7 @@ export async function createExpressApp(): Promise<express.Express> {
 
 function expressConfigMiddleware(app: express.Express): void {
   app.use(express.json({ limit: "50mb" }));
+  app.use(cookieParser());
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   app.disable("x-powered-by");
 
