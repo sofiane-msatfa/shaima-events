@@ -1,6 +1,6 @@
+import type { Document } from "mongoose";
+import { Schema, model } from "mongoose";
 import { Collection } from "@/domain/enum/collection.js";
-import { Schema, SchemaTypes, model } from "mongoose";
-import type { Types, Document } from "mongoose";
 
 interface LocationDocument extends Document {
   name: string;

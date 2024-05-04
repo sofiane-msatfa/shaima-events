@@ -1,163 +1,125 @@
+import type { RequestHandler, Response } from "express";
+import type { EventService } from "@/domain/service/event-service.js";
+
 import { inject, injectable } from "inversify";
 import { IDENTIFIER } from "@/dependency/identifiers.js";
-import { ResultAsync } from "neverthrow";
 import { HttpCode } from "@/domain/enum/http-code.js";
-import type { RequestHandler, Response } from "express";
-import type { EventRepository } from "@/domain/repository/event-repository.js";
-import { eventRequestSchema } from "@/domain/dto/event-request.js";
-import { getUserLightFromRequest } from "@/utils/express.js";
-import { Types } from "mongoose";
-import { AuthenticationError } from "@/domain/error/authentication-error.js";
-import type { PaginatedResult } from "@/domain/entity/pagination-result.js";
-import { paginate } from "@/utils/pagination.js";
-import type { Event } from "@/domain/entity/event.js";
+import { eventCreateRequestSchema } from "@common/dto/event-create-request.js";
+import { eventUpdateRequestSchema } from "@common/dto/event-update-request.js";
+import { eventFiltersSchema } from "@common/dto/event-filters.js";
+import { EventError } from "@/domain/error/event-error.js";
+import { paginationFiltersSchema } from "@common/dto/pagination-filters.js";
+import { asyncHandler, getUserLightFromRequest } from "@/utils/express.js";
+import { assert } from "@/utils/validation.js";
 
 @injectable()
 export class EventController {
-    @inject(IDENTIFIER.EventRepository)
-    private readonly eventRepository!: EventRepository;
+  @inject(IDENTIFIER.EventService)
+  private readonly eventService!: EventService;
 
-    public getEvents: RequestHandler = async (req, res, next) => {
-        const page = parseInt(req.query.page as string) || 1;
-        const pageSize = parseInt(req.query.pageSize as string) || 10;
+  public getEvents: RequestHandler = asyncHandler(async (req, res, next) => {
+    // on peut parse car tous les paramètres sont optionnels
+    const filters = eventFiltersSchema.partial().parse(req.query);
 
-        const events = await ResultAsync.fromPromise(
-            this.eventRepository.findAll(),
-            (error) => error,
-        );
+    const events = await this.eventService.getEvents(filters);
 
-        if (events.isErr()) {
-            return res.status(HttpCode.INTERNAL_SERVER_ERROR).json(events.error);
-        }
-
-        const paginatedResult: PaginatedResult<Event> = paginate(
-            events.value,
-            page,
-            pageSize
-        );
-
-        res.status(HttpCode.OK).json(paginatedResult);
-        next();
-    };
-
-    public createEvent: RequestHandler = async (req, res, next) => {
-        const validation = eventRequestSchema.safeParse(req.body);
-
-        const currentUser = getUserLightFromRequest(req);
-
-        if (!validation.success) {
-            return res.status(HttpCode.BAD_REQUEST).json(validation.error);
-        }
-        const authorId = new Types.ObjectId(currentUser.id);
-
-        const newEvent = await ResultAsync.fromPromise(
-            this.eventRepository.create(validation.data, authorId),
-            (error) => error,
-        );
-
-        if (newEvent.isErr()) {
-            return res.status(HttpCode.INTERNAL_SERVER_ERROR).json(newEvent.error);
-        }
-
-        res.status(HttpCode.CREATED).json(newEvent.value);
-    };
-
-    public deleteEvent: RequestHandler = async (req, res, next) => {
-        const { id } = req.params;
-        const currentUser = getUserLightFromRequest(req);
-
-        if (!id) return res.status(HttpCode.BAD_REQUEST).json({ message: "Id is required" });
-
-        const event = await ResultAsync.fromPromise(
-            this.eventRepository.findById(id),
-            (error) => error,
-        );
-
-        if (event.isErr()) return res.status(HttpCode.NOT_FOUND).json("Error");
-
-        if (!event.value) return res.status(HttpCode.NOT_FOUND).json("Error");
-
-        if (event.value.author.toString() !== currentUser.id) return res.status(HttpCode.FORBIDDEN).json(AuthenticationError.Unauthorized);
-
-        const deletedEvent = await ResultAsync.fromPromise(
-            this.eventRepository.delete(id),
-            (error) => error,
-        );
-
-        if (deletedEvent.isErr()) { return res.status(HttpCode.INTERNAL_SERVER_ERROR).json(deletedEvent.error); }
-
-        res.status(HttpCode.NO_CONTENT).send();
-    };
-
-    public findEventById: RequestHandler = async (req, res) => {
-        const { id } = req.params!;
-
-        if (!id) return res.status(HttpCode.BAD_REQUEST).json({ message: "Id is required" });
-
-        const currentUser = getUserLightFromRequest(req);
-
-        const event = await ResultAsync.fromPromise(
-            this.eventRepository.findById(id),
-            (error) => error,
-        );
-
-        if (event.isErr()) { return res.status(HttpCode.INTERNAL_SERVER_ERROR).json(event.error); }
-
-        if (!event.value) return res.status(HttpCode.NOT_FOUND).json("Error");
-
-        if (event.value.author.toString() !== currentUser.id) return res.status(HttpCode.FORBIDDEN).json(AuthenticationError.Unauthorized);
-
-        res.status(HttpCode.OK).json(event.value);
+    if (events.isErr()) {
+      this.handleEventError(events.error, res);
+      return next();
     }
 
-    public findAllFromAuthorId: RequestHandler = async (req, res) => {
-        const page = parseInt(req.query.page as string) || 1;
-        const pageSize = parseInt(req.query.pageSize as string) || 10;
+    res.status(HttpCode.OK).json(events.value);
+  });
 
-        const currentUser = getUserLightFromRequest(req);
+  public createEvent: RequestHandler = asyncHandler(async (req, res, next) => {
+    const eventCreateRequest = assert(req.body, eventCreateRequestSchema);
 
-        const authorId = new Types.ObjectId(currentUser.id);
-
-        const events = await ResultAsync.fromPromise(
-            this.eventRepository.findAllByAuthorId(authorId),
-            (error) => error,
-        );
-
-        if (events.isErr()) { return res.status(HttpCode.INTERNAL_SERVER_ERROR).json(events.error); }
-        const paginatedResult: PaginatedResult<Event> = paginate(
-            events.value,
-            page,
-            pageSize
-        );
-        res.status(HttpCode.OK).json(paginatedResult);
+    if (eventCreateRequest.isErr()) {
+      return res.status(HttpCode.BAD_REQUEST).json(eventCreateRequest.error);
     }
 
-    public updateEvent: RequestHandler = async (req, res) => {
-        const { id } = req.params;
-        const currentUser = getUserLightFromRequest(req);
+    const user = getUserLightFromRequest(req);
+    const newEvent = await this.eventService.createEvent(eventCreateRequest.value, user);
 
-        if (!id) return res.status(HttpCode.BAD_REQUEST).json({ message: "Id is required" });
-
-        const event = await ResultAsync.fromPromise(
-            this.eventRepository.findById(id),
-            (error) => error,
-        );
-
-        if (event.isErr()) { return res.status(HttpCode.INTERNAL_SERVER_ERROR).json(event.error); }
-
-        if (!event.value) return res.status(HttpCode.NOT_FOUND).json("Error");
-
-        if (event.value.author.toString() !== currentUser.id) return res.status(HttpCode.FORBIDDEN).json(AuthenticationError.Unauthorized);
-
-        const updatedEvent = await ResultAsync.fromPromise(
-            this.eventRepository.update(id, req.body),
-            (error) => error,
-        );
-
-        if (updatedEvent.isErr()) { return res.status(HttpCode.INTERNAL_SERVER_ERROR).json(updatedEvent.error); }
-
-        if (!updatedEvent.value) return res.status(HttpCode.NOT_FOUND).json("Error");
-
-        res.status(HttpCode.OK).json(updatedEvent.value);
+    if (newEvent.isErr()) {
+      this.handleEventError(newEvent.error, res);
+      return next();
     }
+
+    res.status(HttpCode.CREATED).json(newEvent.value);
+  });
+
+  public deleteEvent: RequestHandler = asyncHandler(async (req, res, next) => {
+    const eventId = req.params.id as string;
+    const currentUser = getUserLightFromRequest(req);
+
+    const deletionResult = await this.eventService.deleteEvent(eventId, currentUser);
+
+    if (deletionResult.isErr()) {
+      this.handleEventError(deletionResult.error, res);
+      return next();
+    }
+
+    res.status(HttpCode.NO_CONTENT).send();
+  });
+
+  // l'objet est le même peu import l'utilisateur pour l'instant
+  public getEvent: RequestHandler = async (req, res) => {
+    const eventId = req.params.id as string;
+
+    const lookupResult = await this.eventService.getEvent(eventId);
+
+    if (lookupResult.isErr()) {
+      this.handleEventError(lookupResult.error, res);
+      return;
+    }
+
+    res.status(HttpCode.OK).json(lookupResult.value);
+  };
+
+  public getAllForCurrentUser: RequestHandler = asyncHandler(async (req, res, next) => {
+    const { page, pageSize } = paginationFiltersSchema.parse(req.query);
+    const currentUser = getUserLightFromRequest(req);
+
+    const events = await this.eventService.getEvents({ author: currentUser.id, page, pageSize });
+
+    res.status(HttpCode.OK).json(events);
+  });
+
+  public updateEvent: RequestHandler = asyncHandler(async (req, res, next) => {
+    const eventId = req.params.id as string;
+    const currentUser = getUserLightFromRequest(req);
+    const eventRequest = assert(req.body, eventUpdateRequestSchema);
+
+    if (eventRequest.isErr()) {
+      return res.status(HttpCode.BAD_REQUEST).json(eventRequest.error);
+    }
+
+    const updatedEvent = await this.eventService.updateEvent(
+      eventId,
+      eventRequest.value,
+      currentUser,
+    );
+
+    if (updatedEvent.isErr()) {
+      this.handleEventError(updatedEvent.error, res);
+      return next();
+    }
+
+    res.status(HttpCode.OK).json(updatedEvent.value);
+  });
+
+  private handleEventError(error: EventError, res: Response): Response {
+    switch (error) {
+      case EventError.CreationFailed:
+      case EventError.DeletionFailed:
+      case EventError.LookupFailed:
+      case EventError.UpdateFailed:
+        return res.status(HttpCode.INTERNAL_SERVER_ERROR).send("Internal server error");
+      case EventError.NotFound:
+        return res.status(HttpCode.NOT_FOUND).send("Event not found");
+      case EventError.Forbidden:
+        return res.status(HttpCode.FORBIDDEN).send("Forbidden");
+    }
+  }
 }

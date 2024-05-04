@@ -1,13 +1,15 @@
+import type { RequestHandler, Response } from "express";
+import type { AuthService } from "@/domain/service/auth-service.js";
+
+import { inject, injectable } from "inversify";
+import { env } from "@/env.js";
 import { IDENTIFIER } from "@/dependency/identifiers.js";
-import { loginRequestSchema } from "@/domain/dto/login-request.js";
-import { registerRequestSchema } from "@/domain/dto/register-request.js";
+import { loginRequestSchema } from "@common/dto/login-request.js";
+import { registerRequestSchema } from "@common/dto/register-request.js";
 import { HttpCode } from "@/domain/enum/http-code.js";
 import { AuthenticationError } from "@/domain/error/authentication-error.js";
-import type { AuthService } from "@/domain/service/auth-service.js";
-import { env } from "@/env.js";
 import { asyncHandler } from "@/utils/express.js";
-import type { RequestHandler, Response } from "express";
-import { inject, injectable } from "inversify";
+import { assert } from "@/utils/validation.js";
 
 @injectable()
 export class AuthController {
@@ -15,16 +17,15 @@ export class AuthController {
   private readonly authService!: AuthService;
 
   public login: RequestHandler = asyncHandler(async (req, res, next) => {
-    const validation = loginRequestSchema.safeParse(req.body);
+    const credentials = assert(req.body, loginRequestSchema);
 
-    if (!validation.success) {
-      return res.status(HttpCode.BAD_REQUEST).json(validation.error);
+    if (credentials.isErr()) {
+      return res.status(HttpCode.BAD_REQUEST).json(credentials.error);
     }
 
-    const authPayload = await this.authService.login(
-      validation.data.email,
-      validation.data.password,
-    );
+    const { email, password } = credentials.value;
+
+    const authPayload = await this.authService.login(email, password);
 
     if (authPayload.isErr()) {
       this.handleAuthenticationError(authPayload.error, res);
@@ -38,13 +39,13 @@ export class AuthController {
   });
 
   public register: RequestHandler = asyncHandler(async (req, res, next) => {
-    const validation = registerRequestSchema.safeParse(req.body);
+    const credentials = assert(req.body, registerRequestSchema);
 
-    if (!validation.success) {
-      return res.status(HttpCode.BAD_REQUEST).json(validation.error);
+    if (credentials.isErr()) {
+      return res.status(HttpCode.BAD_REQUEST).json(credentials.error);
     }
 
-    const authPayload = await this.authService.register(validation.data);
+    const authPayload = await this.authService.register(credentials.value);
 
     if (authPayload.isErr()) {
       this.handleAuthenticationError(authPayload.error, res);
@@ -54,28 +55,25 @@ export class AuthController {
     res.status(HttpCode.CREATED).send("User created");
   });
 
-  public refreshTokens: RequestHandler = asyncHandler(
-    async (req, res, next) => {
-      const refreshToken = req.cookies.refreshToken;
+  public refreshTokens: RequestHandler = asyncHandler(async (req, res, next) => {
+    const refreshToken = req.cookies.refreshToken;
 
-      if (!refreshToken) {
-        return res.status(HttpCode.BAD_REQUEST).send("Refresh token not found");
-      }
+    if (!refreshToken) {
+      return res.status(HttpCode.BAD_REQUEST).send("Refresh token not found");
+    }
 
-      const authPayload =
-        await this.authService.refreshAuthTokens(refreshToken);
+    const authPayload = await this.authService.refreshAuthTokens(refreshToken);
 
-      if (authPayload.isErr()) {
-        this.handleAuthenticationError(authPayload.error, res);
-        return next();
-      }
+    if (authPayload.isErr()) {
+      this.handleAuthenticationError(authPayload.error, res);
+      return next();
+    }
 
-      const { accessToken, refreshToken: newRefreshToken } = authPayload.value;
+    const { accessToken, refreshToken: newRefreshToken } = authPayload.value;
 
-      this.setRefreshTokenCookie(res, newRefreshToken);
-      res.status(HttpCode.OK).json({ accessToken });
-    },
-  );
+    this.setRefreshTokenCookie(res, newRefreshToken);
+    res.status(HttpCode.OK).json({ accessToken });
+  });
 
   public logout = asyncHandler(async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
@@ -90,10 +88,7 @@ export class AuthController {
     res.status(HttpCode.OK).send("Logged out");
   });
 
-  private setRefreshTokenCookie = (
-    res: Response,
-    refreshToken: string,
-  ): void => {
+  private setRefreshTokenCookie = (res: Response, refreshToken: string): void => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
@@ -102,10 +97,7 @@ export class AuthController {
     });
   };
 
-  private handleAuthenticationError = (
-    error: AuthenticationError,
-    res: Response,
-  ): Response => {
+  private handleAuthenticationError = (error: AuthenticationError, res: Response): Response => {
     switch (error) {
       case AuthenticationError.EmailAlreadyExists:
         // avoid leaking information about existing users
@@ -120,9 +112,7 @@ export class AuthController {
       case AuthenticationError.UserNotFound:
         return res.status(HttpCode.NOT_FOUND).send("User not found");
       case AuthenticationError.UserCreationFailed:
-        return res
-          .status(HttpCode.INTERNAL_SERVER_ERROR)
-          .send("User creation failed");
+        return res.status(HttpCode.INTERNAL_SERVER_ERROR).send("User creation failed");
       case AuthenticationError.TokenExpired:
         return res.status(HttpCode.UNAUTHORIZED).send("TokenExpired");
       case AuthenticationError.InvalidRefreshToken:

@@ -1,9 +1,10 @@
-import { Collection } from "@/domain/enum/collection.js";
-import { EventCategory } from "@/domain/enum/event-category.js";
-import { Schema, SchemaTypes, model } from "mongoose";
 import type { Types, Document } from "mongoose";
+import { Schema, SchemaTypes, model, type PaginateModel } from "mongoose";
+import { Collection } from "@/domain/enum/collection.js";
+import { EventCategory } from "@common/enum/event-category.js";
+import paginate from "mongoose-paginate-v2";
 
-interface EventDocument extends Document {
+export interface EventDocument extends Document {
   name: string;
   description?: string;
   category: EventCategory;
@@ -49,6 +50,11 @@ const eventSchema = new Schema<EventDocument>(
   { timestamps: true },
 );
 
-const EventModel = model<EventDocument>(Collection.Event, eventSchema);
+eventSchema.plugin(paginate);
+
+const EventModel = model<EventDocument, PaginateModel<EventDocument>>(
+  Collection.Event,
+  eventSchema,
+);
 
 export default EventModel;

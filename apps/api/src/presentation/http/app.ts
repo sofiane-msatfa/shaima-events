@@ -12,7 +12,7 @@ export async function createExpressApp(): Promise<express.Express> {
 
   bindDependencies();
 
-  expressConfigMiddleware(app)
+  expressConfigMiddleware(app);
   registerEndpoints(app);
 
   return app;
@@ -24,9 +24,11 @@ function expressConfigMiddleware(app: express.Express): void {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   app.disable("x-powered-by");
 
-  app.use(cors({
-    origin: ["http://localhost:3000", "http://localhost:5173"],
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Accept", "Authorization"],
-  }));
+  app.use(
+    cors({
+      origin: ["http://localhost:3000", "http://localhost:5173"],
+      credentials: true,
+      allowedHeaders: ["Content-Type", "Accept", "Authorization"],
+    }),
+  );
 }

@@ -2,10 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import { AuthContext, type AuthContextType } from "./auth-context";
 import api, { setAccessTokenInterceptor } from "@/utils/api";
 import { useQuery } from "@tanstack/react-query";
-import type { LoginRequest } from "@/dtos/login-request";
-import type { RegisterRequest } from "@/dtos/register-request";
-import type { AccessTokenResponse } from "@/dtos/access-token-response";
-import type { UserLight } from "@/dtos/user-light";
+import type { LoginRequest } from "@common/dto/login-request";
+import type { RegisterRequest } from "@common/dto/register-request";
+import type { AccessTokenResponse } from "@common/dto/access-token-response";
+import type { UserLight } from "@common/dto/user-light";
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -24,7 +24,7 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
       return response.data;
     },
     enabled: isAuthenticated,
-  })
+  });
 
   useEffect(() => {
     if (accessToken) {
@@ -40,10 +40,7 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
 
   // we should handle errors in the component that uses the context
   const login = async (credentials: LoginRequest) => {
-    const response = await api.post<AccessTokenResponse>(
-      "/auth/login",
-      credentials,
-    );
+    const response = await api.post<AccessTokenResponse>("/auth/login", credentials);
     const { accessToken } = response.data;
     localStorage.setItem("access_token", accessToken);
     setAccessToken(accessToken);

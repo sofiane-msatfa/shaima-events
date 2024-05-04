@@ -1,6 +1,6 @@
-import type { AuthTokens } from "@/domain/dto/auth-tokens.js";
-import type { RegisterRequest } from "@/domain/dto/register-request.js";
-import type { UserLight } from "@/domain/dto/user-light.js";
+import type { AuthTokens } from "@/domain/entity/auth-tokens.js";
+import type { RegisterRequest } from "@common/dto/register-request.js";
+import type { UserLight } from "@common/dto/user-light.js";
 import type { User } from "@/domain/entity/user.js";
 import type { UserRepository } from "@/domain/repository/user-repository.js";
 import type { AuthService } from "@/domain/service/auth-service.js";
@@ -12,11 +12,7 @@ import { ResultAsync, errAsync, okAsync } from "neverthrow";
 import { IDENTIFIER } from "@/dependency/identifiers.js";
 import { AuthenticationError } from "@/domain/error/authentication-error.js";
 import { stall } from "@/utils/stall.js";
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  verifyRefreshToken,
-} from "@/utils/jwt.js";
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "@/utils/jwt.js";
 
 @injectable()
 export class AuthConcreteService implements AuthService {
@@ -47,14 +43,11 @@ export class AuthConcreteService implements AuthService {
     const userLight = this.toUserLight(user);
     const authtokens = await this.generateAuthTokens(userLight);
 
-
     await stall(stallTime, timeStart);
     return okAsync(authtokens);
   }
 
-  async register(
-    user: RegisterRequest,
-  ): Promise<ResultAsync<void, AuthenticationError>> {
+  async register(user: RegisterRequest): Promise<ResultAsync<void, AuthenticationError>> {
     const existingUser = await this.userRepository.findByEmail(user.email);
 
     if (existingUser) {
@@ -91,10 +84,7 @@ export class AuthConcreteService implements AuthService {
 
     const userLight = result.value;
 
-    const storedToken = await this.userRepository.findRefreshToken(
-      userLight.id,
-      refreshToken,
-    );
+    const storedToken = await this.userRepository.findRefreshToken(userLight.id, refreshToken);
 
     if (!storedToken) {
       return errAsync(AuthenticationError.InvalidRefreshToken);

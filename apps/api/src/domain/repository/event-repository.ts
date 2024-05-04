@@ -1,12 +1,12 @@
-import type { Types } from "mongoose";
-import type { EventRequest } from "../dto/event-request.js";
 import type { Event } from "@/domain/entity/event.js";
+import type { EventFilters } from "@common/dto/event-filters.js";
+import type { EventCreateRequest } from "@common/dto/event-create-request.js";
+import type { PaginationResponse } from "@common/dto/pagination-response.js";
 
 export interface EventRepository {
-  create(event: EventRequest, authordId: Types.ObjectId): Promise<Event>;
+  create(event: EventCreateRequest, authordId: string): Promise<Event>;
   delete(id: string): Promise<void>;
-  findAll(): Promise<Event[]>;
+  findAll(filters?: Partial<EventFilters>): Promise<PaginationResponse<Event>>;
   findById(id: string): Promise<Event | null>;
-  findAllByAuthorId(authorId: Types.ObjectId): Promise<Event[]>;
   update(id: string, event: Partial<Event>): Promise<Event | null>;
 }

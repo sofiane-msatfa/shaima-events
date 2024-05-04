@@ -1,0 +1,185 @@
+{
+  "info": {
+    "name": "shaima-events",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "bruno",
+      "event": []
+    },
+    {
+      "name": "Connexion",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/auth/login",
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "email",
+              "value": "{{email}}",
+              "disabled": false,
+              "type": "default"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "disabled": false,
+              "type": "default"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Refresh session",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const cookie = bru.getEnvVar(\"cookie\");",
+              "",
+              "if(cookie) {",
+              "  req.setHeader(\"Cookie\", cookie)",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/auth/refresh"
+      }
+    },
+    {
+      "name": "Inscription",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/auth/register",
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "firstname",
+              "value": "admin",
+              "disabled": false,
+              "type": "default"
+            },
+            {
+              "key": "lastname",
+              "value": "admin",
+              "disabled": false,
+              "type": "default"
+            },
+            {
+              "key": "email",
+              "value": "{{email}}",
+              "disabled": false,
+              "type": "default"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "disabled": false,
+              "type": "default"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Informations utilisateur",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/users/me"
+      }
+    },
+    {
+      "name": "Créer event",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/events",
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "name",
+              "value": "Event test",
+              "disabled": false,
+              "type": "default"
+            },
+            {
+              "key": "description",
+              "value": "Description optionnelle",
+              "disabled": false,
+              "type": "default"
+            },
+            {
+              "key": "category",
+              "value": "Festival",
+              "disabled": false,
+              "type": "default"
+            },
+            {
+              "key": "location",
+              "value": "Paris",
+              "disabled": false,
+              "type": "default"
+            },
+            {
+              "key": "startTime",
+              "value": "2024-08-13T00:00:00.000Z",
+              "disabled": false,
+              "type": "default"
+            },
+            {
+              "key": "endTime",
+              "value": "2024-08-15T00:00:00.000Z",
+              "disabled": false,
+              "type": "default"
+            },
+            {
+              "key": "capacity",
+              "value": "150",
+              "disabled": false,
+              "type": "default"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "email",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "password",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}

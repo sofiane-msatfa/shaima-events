@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const registerRequestSchema = z.object({
-  firstname: z.string().min(2).max(255),
-  lastname: z.string().min(2).max(255),
+  firstname: z.string(),
+  lastname: z.string(),
   email: z.string().email(),
-  password: z.string().min(8).max(255),
+  password: z.string(),
 });
 
 export type RegisterRequest = z.infer<typeof registerRequestSchema>;

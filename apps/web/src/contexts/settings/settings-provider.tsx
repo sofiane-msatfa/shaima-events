@@ -1,9 +1,5 @@
 import { useLocalStorage } from "@/hooks/use-local-storage";
-import type {
-  SettingsValue,
-  SettingsContextType,
-  ThemeColorPresets,
-} from "./settings-context";
+import type { SettingsValue, SettingsContextType, ThemeColorPresets } from "./settings-context";
 import { SettingsContext } from "./settings-context";
 import { useMemo } from "react";
 import type { PaletteMode } from "@mui/material";
@@ -13,10 +9,7 @@ interface SettingsProviderProps {
   defaultSettings: SettingsValue;
 }
 
-export function SettingsContextProvider({
-  children,
-  defaultSettings,
-}: SettingsProviderProps) {
+export function SettingsContextProvider({ children, defaultSettings }: SettingsProviderProps) {
   const [settings, setSettings] = useLocalStorage("settings", defaultSettings);
 
   const setThemeMode = (mode: PaletteMode) => {
@@ -47,9 +40,5 @@ export function SettingsContextProvider({
     [settings, setThemeMode, toggleThemeMode, setThemeColorPresets],
   );
 
-  return (
-    <SettingsContext.Provider value={value}>
-      {children}
-    </SettingsContext.Provider>
-  );
+  return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
 }

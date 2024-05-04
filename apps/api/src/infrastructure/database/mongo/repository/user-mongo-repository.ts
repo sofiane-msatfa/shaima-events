@@ -1,17 +1,18 @@
-import type { RegisterRequest } from "@/domain/dto/register-request.js";
+import type { RegisterRequest } from "@common/dto/register-request.js";
 import type { User } from "@/domain/entity/user.js";
 import type { UserRepository } from "@/domain/repository/user-repository.js";
-import UserModel, { type UserDocument } from "../model/user.js";
-import RefreshTokenModel from "../model/refresh-token.js";
+import type { RefreshToken } from "@/domain/entity/refresh-token.js";
+
 import { injectable } from "inversify";
 import { env } from "@/env.js";
-import type { RefreshToken } from "@/domain/entity/refresh-token.js";
+import UserModel, { type UserDocument } from "../model/user.js";
+import RefreshTokenModel from "../model/refresh-token.js";
 
 @injectable()
 export class UserMongoRepository implements UserRepository {
   async create(user: RegisterRequest): Promise<User> {
     const newUser = await UserModel.create(user);
-    return newUser.toJSON();
+    return this.toUserEntity(newUser);
   }
 
   async findById(id: string): Promise<User | null> {
@@ -43,10 +44,7 @@ export class UserMongoRepository implements UserRepository {
     return this.toUserEntity(updatedUser);
   }
 
-  async findRefreshToken(
-    userId: string,
-    refreshToken: string,
-  ): Promise<RefreshToken | null> {
+  async findRefreshToken(userId: string, refreshToken: string): Promise<RefreshToken | null> {
     const token = await RefreshTokenModel.findOne({
       userId,
       token: refreshToken,
@@ -55,10 +53,7 @@ export class UserMongoRepository implements UserRepository {
     return token.toJSON();
   }
 
-  async createRefreshToken(
-    userId: string,
-    refreshToken: string,
-  ): Promise<void> {
+  async createRefreshToken(userId: string, refreshToken: string): Promise<void> {
     await RefreshTokenModel.create({
       userId,
       token: refreshToken,
