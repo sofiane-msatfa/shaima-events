@@ -17,6 +17,7 @@ export function Component() {
   const [filters, setFilters] = useState<PartialEventFilters>(defaultFilters);
   const events = useGetEvents(filters);
 
+
   const { ref, inView } = useInView({
     threshold: 0.2,
   });
@@ -32,6 +33,7 @@ export function Component() {
   }, [inView, events]);
 
   const allEvents = events.data?.pages.flatMap((page) => page.data) ?? [];
+
 
   return (
     <Container sx={{ my: 10 }}>
