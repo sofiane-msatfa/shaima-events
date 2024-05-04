@@ -1,4 +1,4 @@
-import type { UserLight } from "@/domain/dto/user-light.js";
+import type { UserLight } from "@common/dto/user-light.js";
 import { AuthenticationError } from "@/domain/error/authentication-error.js";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 import { Result } from "neverthrow";
@@ -25,9 +25,7 @@ function handleJwtError(err: unknown): AuthenticationError {
   return AuthenticationError.Unauthorized;
 }
 
-export function verifyAccessToken(
-  token: string,
-): Result<UserLight, AuthenticationError> {
+export function verifyAccessToken(token: string): Result<UserLight, AuthenticationError> {
   return Result.fromThrowable(
     () => {
       const { sub } = jwt.verify(token, "secret") as Required<JwtPayload>;
@@ -37,9 +35,7 @@ export function verifyAccessToken(
   )();
 }
 
-export function verifyRefreshToken(
-  token: string,
-): Result<UserLight, AuthenticationError> {
+export function verifyRefreshToken(token: string): Result<UserLight, AuthenticationError> {
   return Result.fromThrowable(
     () => {
       const { sub } = jwt.verify(token, "secret") as Required<JwtPayload>;

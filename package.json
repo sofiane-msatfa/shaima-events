@@ -5,7 +5,9 @@
   "scripts": {
     "dev:web": "pnpm --filter web dev",
     "dev:api": "pnpm --filter api dev",
-    "dev": "concurrently \"pnpm dev:web\" \"pnpm dev:api\""
+    "dev": "concurrently \"pnpm dev:web\" \"pnpm dev:api\"",
+    "format": "biome format --write .",
+    "lint": "biome lint ."
   },
   "devDependencies": {
     "@biomejs/biome": "1.7.1",

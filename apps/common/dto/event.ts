@@ -1,4 +1,4 @@
-import type { EventCategory } from "@common/enum/event-category.js";
+import type { EventCategory } from "../enum/event-category.js";
 
 export interface Event {
   id: string;

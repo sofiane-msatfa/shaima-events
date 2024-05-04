@@ -1,9 +1,10 @@
 import type { UserRepository } from "@/domain/repository/user-repository.js";
-import type { RegisterRequest } from "@/domain/dto/register-request.js";
+import type { RegisterRequest } from "@common/dto/register-request.js";
 import type { User } from "@/domain/entity/user.js";
+import type { RefreshToken } from "@/domain/entity/refresh-token.js";
+
 import { randomId } from "@/utils/random-id.js";
 import { injectable } from "inversify";
-import type { RefreshToken } from "@/domain/entity/refresh-token.js";
 import { env } from "@/env.js";
 
 @injectable()
@@ -47,10 +48,7 @@ export class UserMemoryRepository implements UserRepository {
     return updatedUser;
   }
 
-  async createRefreshToken(
-    userId: string,
-    refreshToken: string,
-  ): Promise<void> {
+  async createRefreshToken(userId: string, refreshToken: string): Promise<void> {
     const token: RefreshToken = {
       userId,
       token: refreshToken,
@@ -59,20 +57,14 @@ export class UserMemoryRepository implements UserRepository {
     this.refreshTokens.push(token);
   }
 
-  async findRefreshToken(
-    userId: string,
-    refreshToken: string,
-  ): Promise<RefreshToken | null> {
+  async findRefreshToken(userId: string, refreshToken: string): Promise<RefreshToken | null> {
     return (
-      this.refreshTokens.find(
-        (token) => token.userId === userId && token.token === refreshToken,
-      ) || null
+      this.refreshTokens.find((token) => token.userId === userId && token.token === refreshToken) ||
+      null
     );
   }
 
   async deleteRefreshToken(refreshToken: string): Promise<void> {
-    this.refreshTokens = this.refreshTokens.filter(
-      (token) => token.token !== refreshToken,
-    );
+    this.refreshTokens = this.refreshTokens.filter((token) => token.token !== refreshToken);
   }
 }

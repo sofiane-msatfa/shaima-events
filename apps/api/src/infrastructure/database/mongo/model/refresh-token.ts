@@ -1,6 +1,6 @@
-import { Collection } from "@/domain/enum/collection.js";
-import { Schema, SchemaTypes, model } from "mongoose";
 import type { Types, Document } from "mongoose";
+import { Schema, SchemaTypes, model } from "mongoose";
+import { Collection } from "@/domain/enum/collection.js";
 
 interface RefreshTokenDocument extends Document {
   userId: Types.ObjectId;

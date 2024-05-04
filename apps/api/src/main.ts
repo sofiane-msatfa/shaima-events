@@ -5,12 +5,12 @@ async function runServer() {
   const { env } = await import("./env.js");
   const app = await createExpressApp();
 
-  // const connectionResult = await connectToMongoDb(env.MONGODB_URI);
+  const connectionResult = await connectToMongoDb(env.MONGODB_URI);
 
-  // if (connectionResult.isErr()) {
-  //   console.error(connectionResult.error);
-  //   return process.exit(1);
-  // }
+  if (connectionResult.isErr()) {
+    console.error(connectionResult.error);
+    return process.exit(1);
+  }
 
   app
     .listen(env.PORT, () => {

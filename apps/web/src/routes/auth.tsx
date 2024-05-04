@@ -12,7 +12,7 @@ export const authRoutes: RouteObject[] = [
       </Suspense>
     ),
     children: [
-      { path: "login", element: <Login />},
+      { path: "login", element: <Login /> },
       { path: "register", lazy: () => import("@/pages/auth/register") },
     ],
   },

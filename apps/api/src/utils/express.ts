@@ -1,5 +1,5 @@
 import { LIGHT_USER } from "@/constants.js";
-import type { UserLight } from "@/domain/dto/user-light.js";
+import type { UserLight } from "@common/dto/user-light.js";
 import type { RequestHandler, Request } from "express";
 
 export function asyncHandler(handler: RequestHandler): RequestHandler {

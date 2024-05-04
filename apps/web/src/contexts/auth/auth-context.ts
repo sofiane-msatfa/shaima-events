@@ -1,7 +1,7 @@
 import { createContext } from "react";
-import type { LoginRequest } from "@/dtos/login-request";
-import type { RegisterRequest } from "@/dtos/register-request";
-import type { UserLight } from "@/dtos/user-light";
+import type { LoginRequest } from "@common/dto/login-request";
+import type { RegisterRequest } from "@common/dto/register-request";
+import type { UserLight } from "@common/dto/user-light";
 
 type AsyncVoidFunction = () => Promise<void>;
 
@@ -14,6 +14,4 @@ export interface AuthContextType {
   logout: AsyncVoidFunction;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined,
-);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);

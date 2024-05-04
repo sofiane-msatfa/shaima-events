@@ -1,0 +1,278 @@
+{
+  "name": "shaima-events",
+  "version": "1",
+  "items": [
+    {
+      "type": "json",
+      "name": "bruno",
+      "seq": 1
+    },
+    {
+      "type": "http",
+      "name": "Connexion",
+      "seq": 2,
+      "request": {
+        "url": "{{baseUrl}}/auth/login",
+        "method": "POST",
+        "headers": [],
+        "body": {
+          "mode": "formUrlEncoded",
+          "json": "{\n  \"email\": {{email}},\n  \"password\": {{password}}\n}",
+          "formUrlEncoded": [
+            {
+              "name": "email",
+              "value": "{{email}}",
+              "enabled": true
+            },
+            {
+              "name": "password",
+              "value": "{{password}}",
+              "enabled": true
+            }
+          ],
+          "multipartForm": []
+        },
+        "auth": {
+          "mode": "none",
+          "basic": {
+            "username": "",
+            "password": ""
+          },
+          "bearer": {
+            "token": ""
+          }
+        },
+        "script": {
+          "res": "bru.setEnvVar(\"access_token\", res.body.accessToken)\n\nconst cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setEnvVar(\"cookie\", cookies.join('; '));\n}"
+        },
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "Refresh session",
+      "seq": 3,
+      "request": {
+        "url": "{{baseUrl}}/auth/refresh",
+        "method": "POST",
+        "headers": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "auth": {
+          "mode": "none",
+          "basic": {
+            "username": "",
+            "password": ""
+          },
+          "bearer": {
+            "token": ""
+          }
+        },
+        "script": {
+          "req": "const cookie = bru.getEnvVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}",
+          "res": "bru.setEnvVar(\"access_token\", res.body.accessToken)\n\nconst cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setEnvVar(\"cookie\", cookies.join('; '));\n}"
+        },
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "Inscription",
+      "seq": 1,
+      "request": {
+        "url": "{{baseUrl}}/auth/register",
+        "method": "POST",
+        "headers": [],
+        "body": {
+          "mode": "formUrlEncoded",
+          "formUrlEncoded": [
+            {
+              "name": "firstname",
+              "value": "admin",
+              "enabled": true
+            },
+            {
+              "name": "lastname",
+              "value": "admin",
+              "enabled": true
+            },
+            {
+              "name": "email",
+              "value": "{{email}}",
+              "enabled": true
+            },
+            {
+              "name": "password",
+              "value": "{{password}}",
+              "enabled": true
+            }
+          ],
+          "multipartForm": []
+        },
+        "auth": {
+          "mode": "none",
+          "basic": {
+            "username": "",
+            "password": ""
+          },
+          "bearer": {
+            "token": ""
+          }
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "Informations utilisateur",
+      "seq": 5,
+      "request": {
+        "url": "{{baseUrl}}/users/me",
+        "method": "GET",
+        "headers": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "auth": {
+          "mode": "bearer",
+          "basic": {
+            "username": "",
+            "password": ""
+          },
+          "bearer": {
+            "token": "{{access_token}}"
+          }
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "Créer event",
+      "seq": 6,
+      "request": {
+        "url": "{{baseUrl}}/events",
+        "method": "POST",
+        "headers": [],
+        "body": {
+          "mode": "formUrlEncoded",
+          "formUrlEncoded": [
+            {
+              "name": "name",
+              "value": "Event test",
+              "enabled": true
+            },
+            {
+              "name": "description",
+              "value": "Description optionnelle",
+              "enabled": true
+            },
+            {
+              "name": "category",
+              "value": "Festival",
+              "enabled": true
+            },
+            {
+              "name": "location",
+              "value": "Paris",
+              "enabled": true
+            },
+            {
+              "name": "startTime",
+              "value": "2024-08-13T00:00:00.000Z",
+              "enabled": true
+            },
+            {
+              "name": "endTime",
+              "value": "2024-08-15T00:00:00.000Z",
+              "enabled": true
+            },
+            {
+              "name": "capacity",
+              "value": "150",
+              "enabled": true
+            }
+          ],
+          "multipartForm": []
+        },
+        "auth": {
+          "mode": "bearer",
+          "basic": {
+            "username": "",
+            "password": ""
+          },
+          "bearer": {
+            "token": "{{access_token}}"
+          }
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "query": []
+      }
+    }
+  ],
+  "activeEnvironmentUid": "n5eyCgdp17HPLV9uxHrss",
+  "environments": [
+    {
+      "variables": [
+        {
+          "name": "access_token",
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ7XCJpZFwiOlwiNjYzNTgxZDdhODYzYmZmNTQwYmM2YmRiXCIsXCJlbWFpbFwiOlwiYWRtaW5AYnJ1bm8uY29tXCIsXCJmaXJzdG5hbWVcIjpcImFkbWluXCIsXCJsYXN0bmFtZVwiOlwiYWRtaW5cIixcImRlbGV0ZWRBdFwiOm51bGx9IiwiaWF0IjoxNzE0NzgyNjg3LCJleHAiOjE3MTQ3ODQ0ODd9.X-duXvubtmJwSFIEzxgHffMDk_EoXsOUoCCg1n67JuM",
+          "enabled": true,
+          "secret": false,
+          "type": "text"
+        },
+        {
+          "name": "email",
+          "value": "admin@bruno.com",
+          "enabled": true,
+          "secret": false,
+          "type": "text"
+        },
+        {
+          "name": "password",
+          "value": "secretpassword",
+          "enabled": true,
+          "secret": false,
+          "type": "text"
+        },
+        {
+          "name": "cookie",
+          "value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ7XCJpZFwiOlwiNjYzNTgxZDdhODYzYmZmNTQwYmM2YmRiXCIsXCJlbWFpbFwiOlwiYWRtaW5AYnJ1bm8uY29tXCIsXCJmaXJzdG5hbWVcIjpcImFkbWluXCIsXCJsYXN0bmFtZVwiOlwiYWRtaW5cIixcImRlbGV0ZWRBdFwiOm51bGx9IiwiaWF0IjoxNzE0NzgyNjg3LCJleHAiOjE3NDYzNDAyODd9._Jx9MkCOYNMn2Mewr_IsRx2Zx9CD43AJ7wSdnowVtYE; Max-Age=604800; Path=/; Expires=Sat, 11 May 2024 00:31:28 GMT; HttpOnly; Secure; SameSite=Lax",
+          "enabled": true,
+          "secret": false,
+          "type": "text"
+        },
+        {
+          "name": "baseUrl",
+          "value": "http://localhost:3000",
+          "enabled": true,
+          "secret": false,
+          "type": "text"
+        }
+      ],
+      "name": "local"
+    }
+  ]
+}

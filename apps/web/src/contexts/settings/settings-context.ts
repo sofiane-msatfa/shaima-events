@@ -1,13 +1,7 @@
 import { createContext } from "react";
 import type { PaletteMode } from "@mui/material";
 
-export type ThemeColorPresets =
-  | "default"
-  | "cyan"
-  | "purple"
-  | "blue"
-  | "orange"
-  | "red";
+export type ThemeColorPresets = "default" | "cyan" | "purple" | "blue" | "orange" | "red";
 
 export interface SettingsValue {
   themeMode: PaletteMode;
@@ -20,6 +14,4 @@ export interface SettingsContextType extends SettingsValue {
   setThemeColorPresets: (color: ThemeColorPresets) => void;
 }
 
-export const SettingsContext = createContext<SettingsContextType | undefined>(
-  undefined,
-);
+export const SettingsContext = createContext<SettingsContextType | undefined>(undefined);

@@ -1,9 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  registerRequestSchema,
-  type RegisterRequest,
-} from "@/dtos/register-request";
+import { registerRequestSchema, type RegisterRequest } from "@common/dto/register-request";
 import { useAuth } from "@/contexts/auth/use-auth";
 import { useRouter } from "@/hooks/use-router";
 import { z } from "zod";
@@ -52,26 +49,10 @@ export function Component() {
 
   return (
     <form onSubmit={onSubmit}>
-      <input
-        type="text"
-        placeholder="Firstname"
-        {...register("firstname", { required: true })}
-      />
-      <input
-        type="text"
-        placeholder="Lastname"
-        {...register("lastname", { required: true })}
-      />
-      <input
-        type="text"
-        placeholder="Email"
-        {...register("email", { required: true })}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        {...register("password", { required: true })}
-      />
+      <input type="text" placeholder="Firstname" {...register("firstname", { required: true })} />
+      <input type="text" placeholder="Lastname" {...register("lastname", { required: true })} />
+      <input type="text" placeholder="Email" {...register("email", { required: true })} />
+      <input type="password" placeholder="Password" {...register("password", { required: true })} />
       <input
         type="password"
         placeholder="Confirm password"
@@ -80,9 +61,7 @@ export function Component() {
       <button type="submit">Register</button>
       {errors.email && <p>{errors.email.message}</p>}
       {errors.password && <p>{errors.password.message}</p>}
-      {errors.passwordConfirmation && (
-        <p>{errors.passwordConfirmation.message}</p>
-      )}
+      {errors.passwordConfirmation && <p>{errors.passwordConfirmation.message}</p>}
     </form>
   );
 }
