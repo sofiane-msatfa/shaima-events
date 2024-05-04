@@ -4,7 +4,17 @@ import { registerRequestSchema, type RegisterRequest } from "@common/dto/registe
 import { useAuth } from "@/contexts/auth/use-auth";
 import { useRouter } from "@/hooks/use-router";
 import { z } from "zod";
-import { Avatar, Box, Button, Checkbox, Container, CssBaseline, FormControlLabel, Grid, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  FormControlLabel,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 
 Component.displayName = "RegisterPage";
@@ -51,18 +61,15 @@ export function Component() {
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
       <Box
         sx={{
           marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          {/* <LockOutlinedIcon /> */}
-        </Avatar>
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>{/* <LockOutlinedIcon /> */}</Avatar>
         <Typography component="h1" variant="h5" marginTop={2} marginBottom={2}>
           Sign in
         </Typography>
@@ -72,7 +79,7 @@ export function Component() {
               <TextField
                 type="text"
                 placeholder="Firstname"
-                {...register('firstname', { required: true })}
+                {...register("firstname", { required: true })}
                 fullWidth
                 id="firstname"
                 label="Firstname"
@@ -83,7 +90,7 @@ export function Component() {
               <TextField
                 type="text"
                 placeholder="Lastname"
-                {...register('lastname', { required: true })}
+                {...register("lastname", { required: true })}
                 fullWidth
                 id="lastname"
                 label="Lastname"
@@ -94,7 +101,7 @@ export function Component() {
               <TextField
                 type="text"
                 placeholder="Email"
-                {...register('email', { required: true })}
+                {...register("email", { required: true })}
                 fullWidth
                 id="email"
                 label="Email"
@@ -106,7 +113,7 @@ export function Component() {
               <TextField
                 type="password"
                 placeholder="Password"
-                {...register('password', { required: true })}
+                {...register("password", { required: true })}
                 fullWidth
                 id="password"
                 label="Password"
@@ -118,7 +125,7 @@ export function Component() {
               <TextField
                 type="password"
                 placeholder="Confirm password"
-                {...register('passwordConfirmation', { required: true })}
+                {...register("passwordConfirmation", { required: true })}
                 fullWidth
                 id="passwordConfirmation"
                 label="Confirm password"
@@ -128,8 +135,7 @@ export function Component() {
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel
-                control={<Checkbox
-                  value="remember" color="primary" />}
+                control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
             </Grid>
@@ -139,19 +145,14 @@ export function Component() {
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link to="#">
-                Forgot password   ?
-              </Link>
+              <Link to="#">Forgot password ?</Link>
             </Grid>
             <Grid item>
-              <Link to="#">
-                {'Don\'t have an account ? Sign Up'}
-              </Link>
+              <Link to="#">{"Don't have an account ? Sign Up"}</Link>
             </Grid>
           </Grid>
         </Box>
       </Box>
     </Container>
-
   );
 }
