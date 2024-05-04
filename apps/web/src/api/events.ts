@@ -35,7 +35,6 @@ export const fetchMyEvents = async (eventFilters: PartialEventFilters) => {
   const response = await api.get<PaginationResponse<Event>>("/events/me", {
     params: eventFilters,
   });
-
   return response.data;
 };
 

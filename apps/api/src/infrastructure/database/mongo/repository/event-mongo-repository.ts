@@ -1,4 +1,4 @@
-import type { FilterQuery, PaginateOptions } from "mongoose";
+import { Types, type FilterQuery, type PaginateOptions } from "mongoose";
 import type { Event } from "@common/dto/event.js";
 import type { EventRepository } from "@/domain/repository/event-repository.js";
 import type { EventFilters } from "@common/dto/event-filters.js";
@@ -22,8 +22,10 @@ export class EventMongoRepository implements EventRepository {
   }
 
   async findAll(filters?: Partial<EventFilters>): Promise<PaginationResponse<Event>> {
-    const queryFilters = this.buildEventQueryFilters(filters);
+    const queryFilters = this.buildEventQueryFilters(filters, '$or');
     const pagination = this.buildEventPagination(filters);
+
+    console.log(queryFilters)
 
     const events = await EventModel.paginate(queryFilters, pagination);
 
@@ -44,7 +46,10 @@ export class EventMongoRepository implements EventRepository {
     return this.toEventEntity(updatedEvent);
   }
 
-  private buildEventQueryFilters(filters?: Partial<EventFilters>): FilterQuery<EventDocument> {
+  private buildEventQueryFilters(
+    filters?: Partial<EventFilters>,
+    operator: string = ''
+  ): FilterQuery<EventDocument> {
     const query: FilterQuery<EventDocument> = {};
 
     // filters
@@ -54,11 +59,11 @@ export class EventMongoRepository implements EventRepository {
     if (filters?.address) query.address = { $regex: filters.address, $options: "i" };
     if (filters?.startTime) query.startTime = { $gte: filters.startTime };
     if (filters?.endTime) query.endTime = { $lte: filters.endTime };
-    if (filters?.author) query.author = filters.author;
-    if (filters?.participants) query.participants = { $in: filters.participants };
+    if (filters?.author) query[operator] = [...(query[operator] || []), { author: filters.author }];
+    if (filters?.participants) query[operator] = [...(query[operator] || []), { participants: { $in: filters.participants.map(participant => new Types.ObjectId(participant)) } }];
     if (filters?.tags) query.tags = { $in: filters.tags };
-    if (filters?.capacityMin) query.capacity = { $gte: filters.capacityMin };
-    if (filters?.capacityMax) query.capacity = { $lte: filters.capacityMax };
+    if (filters?.capacityMin) query.capacity = { ...(query.capacity || {}), $gte: filters.capacityMin };
+    if (filters?.capacityMax) query.capacity = { ...(query.capacity || {}), $lte: filters.capacityMax };
 
     return query;
   }

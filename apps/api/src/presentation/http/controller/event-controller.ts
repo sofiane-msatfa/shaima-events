@@ -82,19 +82,12 @@ export class EventController {
 
     const currentUser = getUserLightFromRequest(req);
 
-    const filters = {
-      $or: [{ author: currentUser.id }, { participants: currentUser.id }],
-      page,
-      pageSize,
-    };
+    const events = await this.eventService.getEvents({ participants: [currentUser.id], author: currentUser.id, page, pageSize });
 
-    // Get all events for the current user (as author or participant)
-    const events = await this.eventService.getEvents(filters);
-    console.log(events)
     if (events.isErr()) {
       return res.status(HttpCode.INTERNAL_SERVER_ERROR).json({ error: events.error });
     }
-
+    // TODO : handle type 
     res.status(HttpCode.OK).json(events.value);
   });
 
