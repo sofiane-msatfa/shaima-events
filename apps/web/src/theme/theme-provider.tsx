@@ -6,6 +6,7 @@ import { useSettings } from "@/contexts/settings/use-settings";
 import { createPalette } from "./palette";
 import { createPresets } from "./presets";
 import { createCustomShadows } from "./custom-shadows";
+import { componentsOverrides } from "./overrides";
 
 interface ThemeProviderProps {
   children: React.ReactNode;
@@ -28,6 +29,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   );
 
   const theme = createTheme(value);
+  theme.components = componentsOverrides(theme);
 
   return (
     <MuiThemeProvider theme={theme}>

@@ -1,12 +1,16 @@
+import type { SettingsValue } from "./contexts/settings/settings-context";
+
 import { useState } from "react";
+import Router from "./router";
 import { AuthContextProvider } from "./contexts/auth/auth-provider";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import Router from "./router";
 import { RouterProvider } from "react-router-dom";
 import { SettingsContextProvider } from "./contexts/settings/settings-provider";
 import { ThemeProvider } from "./theme/theme-provider";
-import type { SettingsValue } from "./contexts/settings/settings-context";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { fr } from "date-fns/locale/fr";
 
 export default function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -22,8 +26,10 @@ export default function App() {
       <AuthContextProvider>
         <SettingsContextProvider defaultSettings={defaultSettings}>
           <ThemeProvider>
-            <RouterProvider router={router} />
-            <ReactQueryDevtools />
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fr}>
+              <RouterProvider router={router} />
+              <ReactQueryDevtools />
+            </LocalizationProvider>
           </ThemeProvider>
         </SettingsContextProvider>
       </AuthContextProvider>

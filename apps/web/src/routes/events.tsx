@@ -7,11 +7,11 @@ export const eventRoutes: RouteObject[] = [
   {
     path: "events",
     element: (
-      <RootLayout>
-        <Suspense fallback={<SplashScreen />}>
+      <Suspense fallback={<SplashScreen />}>
+        <RootLayout>
           <Outlet />
-        </Suspense>
-      </RootLayout>
+        </RootLayout>
+      </Suspense>
     ),
     children: [{ index: true, lazy: () => import("@/pages/events/root") }],
   },
