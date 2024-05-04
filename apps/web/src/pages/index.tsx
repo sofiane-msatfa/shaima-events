@@ -1,6 +1,6 @@
 import { useAuth } from "@/contexts/auth/use-auth";
 import { Link } from "react-router-dom";
-import api from "@/utils/api";
+import { api } from "@/api/client";
 import { useSettings } from "@/contexts/settings/use-settings";
 import { Typography, Button } from "@mui/material";
 

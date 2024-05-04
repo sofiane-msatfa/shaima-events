@@ -1,3 +1,4 @@
+import { SplashScreen } from "@/components/splash-screen";
 import { Suspense } from "react";
 import { Outlet, type RouteObject } from "react-router-dom";
 
@@ -5,7 +6,7 @@ import { Outlet, type RouteObject } from "react-router-dom";
 export const commonRoutes: RouteObject[] = [
   {
     element: (
-      <Suspense fallback={<div>Chargement...</div>}>
+      <Suspense fallback={<SplashScreen />}>
         <Outlet />
       </Suspense>
     ),

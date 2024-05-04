@@ -1,4 +1,4 @@
-import { createSampleUsers, createSampleEvents } from "./factory.js";
+import { createSampleUsers, createSampleEvents, clearDatabase } from "./factory.js";
 import { connectToMongoDb } from "./database.js";
 import { fileURLToPath } from "node:url";
 import process from "node:process";
@@ -7,8 +7,9 @@ async function seed() {
   const { env } = await import("@/env.js");
   console.log("Seeding database...");
   await connectToMongoDb(env.MONGODB_URI);
-  await createSampleUsers();
-  await createSampleEvents();
+  await clearDatabase();
+  await createSampleUsers(2);
+  await createSampleEvents(500);
   console.log("Database seeded successfully!");
 }
 

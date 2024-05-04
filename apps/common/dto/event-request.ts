@@ -7,6 +7,7 @@ export const eventRequestSchema = z.object({
   description: z.string().optional(),
   category: z.nativeEnum(EventCategory),
   location: z.string(),
+  address: z.string(),
   startTime: z.coerce.date(),
   endTime: z.coerce.date(),
   participants: z.array(z.string()),

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AuthContext, type AuthContextType } from "./auth-context";
-import api, { setAccessTokenInterceptor } from "@/utils/api";
+import { api, setAccessTokenInterceptor } from "@/api/client";
 import { useQuery } from "@tanstack/react-query";
 import type { LoginRequest } from "@common/dto/login-request";
 import type { RegisterRequest } from "@common/dto/register-request";
