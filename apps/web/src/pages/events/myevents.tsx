@@ -1,4 +1,4 @@
-import { useGetEvents } from "@/api/events";
+import { useGetMyEvents } from "@/api/events";
 import { useInView } from "react-intersection-observer";
 import { Container, Typography } from "@mui/material";
 import { EventList } from "@/components/event-list";
@@ -8,9 +8,10 @@ import { useAuth } from "@/contexts/auth/use-auth";
 Component.displayName = "EventsPage";
 
 export function Component() {
-  const events = useGetEvents({ pageSize: 20 });
-  const { user } = useAuth();
+  const events = useGetMyEvents({ pageSize: 20 });
 
+  const { user } = useAuth();
+  
   const { ref, inView } = useInView({
     threshold: 0.2,
   });
@@ -30,9 +31,12 @@ export function Component() {
       <Typography component="h1" variant="h4">
         Events
       </Typography>
-
-      <EventList user={user} events={allEvents} loading={events.isPending} />
-
+      {allEvents.length > 0 ? (
+        <EventList user={user} events={allEvents} loading={events.isPending} />
+      )
+        :
+        <Typography variant="body1">No events found</Typography>
+      }
       <div ref={ref} />
     </Container>
   );

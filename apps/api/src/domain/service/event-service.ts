@@ -19,4 +19,5 @@ export interface EventService {
     event: EventUpdateRequest,
     user: UserLight,
   ): Promise<ResultAsync<Event, EventError>>;
+  joinOrLeaveEvent(id: string, user: UserLight): Promise<ResultAsync<Event, EventError>>;
 }

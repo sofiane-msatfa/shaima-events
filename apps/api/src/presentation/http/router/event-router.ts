@@ -11,6 +11,7 @@ export function eventRouter(): Router {
   router.get("/", controller.getEvents);
   router.post("/", isAuthenticated, controller.createEvent);
   router.get("/me", isAuthenticated, controller.getAllForCurrentUser);
+  router.get("/joinOrLeave/:id/", isAuthenticated, controller.joinOrLeaveEvent);
   router.get("/:id", isAuthenticated, controller.getEvent);
   router.delete("/:id", isAuthenticated, controller.deleteEvent);
   router.patch("/:id", isAuthenticated, controller.updateEvent);

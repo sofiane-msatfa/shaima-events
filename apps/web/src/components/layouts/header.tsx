@@ -15,9 +15,14 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
+import { Link } from "react-router-dom"; // Importez Link si vous utilisez React Router
 
 const drawerWidth = 240;
-const navItems = ["Home", "About", "Contact"];
+const navItems = [
+  { name: "Home", path: "/" },
+  { name: "Events", path: "/events" },
+  { name: "Contact", path: "/contact" }
+];
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -34,9 +39,11 @@ export function Header() {
       <Divider />
       <List>
         {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
+          <ListItem key={item.name} disablePadding>
             <ListItemButton sx={{ textAlign: "center" }}>
-              <ListItemText primary={item} />
+              <Link to={item.path} style={{ textDecoration: "none", color: "inherit" }}>
+                <ListItemText primary={item.name} />
+              </Link>
             </ListItemButton>
           </ListItem>
         ))}
@@ -60,8 +67,8 @@ export function Header() {
 
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: "#fff" }}>
-                {item}
+              <Button key={item.name} sx={{ color: "#fff" }} component={Link} to={item.path}>
+                {item.name}
               </Button>
             ))}
           </Box>

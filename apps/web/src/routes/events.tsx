@@ -13,6 +13,9 @@ export const eventRoutes: RouteObject[] = [
         </Suspense>
       </RootLayout>
     ),
-    children: [{ index: true, lazy: () => import("@/pages/events/root") }],
-  },
+    children: [
+      { index: true, lazy: () => import("@/pages/events/root") },
+      { path: "my-events", lazy: () => import("@/pages/events/myevents")}
+    ]
+  }
 ];

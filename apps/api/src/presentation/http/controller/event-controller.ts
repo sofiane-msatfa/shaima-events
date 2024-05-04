@@ -79,11 +79,23 @@ export class EventController {
 
   public getAllForCurrentUser: RequestHandler = asyncHandler(async (req, res, next) => {
     const { page, pageSize } = paginationFiltersSchema.parse(req.query);
+
     const currentUser = getUserLightFromRequest(req);
 
-    const events = await this.eventService.getEvents({ author: currentUser.id, page, pageSize });
+    const filters = {
+      $or: [{ author: currentUser.id }, { participants: currentUser.id }],
+      page,
+      pageSize,
+    };
 
-    res.status(HttpCode.OK).json(events);
+    // Get all events for the current user (as author or participant)
+    const events = await this.eventService.getEvents(filters);
+    console.log(events)
+    if (events.isErr()) {
+      return res.status(HttpCode.INTERNAL_SERVER_ERROR).json({ error: events.error });
+    }
+
+    res.status(HttpCode.OK).json(events.value);
   });
 
   public updateEvent: RequestHandler = asyncHandler(async (req, res, next) => {
@@ -107,6 +119,20 @@ export class EventController {
     }
 
     res.status(HttpCode.OK).json(updatedEvent.value);
+  });
+
+  public joinOrLeaveEvent: RequestHandler = asyncHandler(async (req, res, next) => {
+    const eventId = req.params.id as string;
+    const currentUser = getUserLightFromRequest(req);
+
+    const participationResult = await this.eventService.joinOrLeaveEvent(eventId, currentUser);
+
+    if (participationResult.isErr()) {
+      this.handleEventError(participationResult.error, res);
+      return next();
+    }
+
+    res.status(HttpCode.OK).json(participationResult.value);
   });
 
   private handleEventError(error: EventError, res: Response): Response {

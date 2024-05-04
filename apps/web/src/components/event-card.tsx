@@ -1,22 +1,31 @@
 import type { Event } from "@common/dto/event";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Stack, Typography, Paper, Fab } from "@mui/material";
 import { Image } from "./image";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Label } from "./label";
+import { joinOrLeaveEvent } from "@/api/events";
+import { UserLight } from "@common/dto/user-light";
 
 interface EventCardProps {
   event: Event;
+  user: UserLight;
 }
 
-export function EventCard({ event }: EventCardProps) {
-  const [isFavorited, setIsFavorited] = useState(false);
+export function EventCard({ event, user }: EventCardProps) {
+  const [isFavorited, setIsFavorited] = useState(() => event.participants.includes(user.id));
+  ;
 
-  const toggleFavorite = () => {
+  const toggleFavorite = async () => {
+    await joinOrLeaveEvent(event.id);
     setIsFavorited((prev) => !prev);
   };
+
+  useEffect(() => {
+    setIsFavorited(event.participants.includes(user.id));
+  }, [event.participants, user.id]);
 
   const formattedDate = new Date(event.startTime).toLocaleDateString("fr-FR", {
     month: "short",

@@ -125,4 +125,35 @@ export class EventConcreteService implements EventService {
 
     return okAsync(updatedEvent.value);
   }
+
+  async joinOrLeaveEvent(id: string, user: UserLight): Promise<ResultAsync<Event, EventError>> {
+    const existingEvent = await this.eventRepository.findById(id);
+
+    if (!existingEvent) {
+      return errAsync(EventError.NotFound);
+    }
+
+    if (existingEvent.participants.includes(user.id)) {
+      existingEvent.participants = existingEvent.participants.filter((participant) => participant !== user.id);
+    }
+    else {
+      existingEvent.participants.push(user.id);
+    }
+
+    const updatedEvent = await ResultAsync.fromPromise(
+      this.eventRepository.update(id, existingEvent),
+      (error) => error,
+    );
+
+    if (updatedEvent.isErr()) {
+      console.error(updatedEvent.error);
+      return errAsync(EventError.UpdateFailed);
+    }
+
+    if (!updatedEvent.value) {
+      return errAsync(EventError.NotFound);
+    }
+
+    return okAsync(updatedEvent.value);
+  }
 }
