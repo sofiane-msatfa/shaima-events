@@ -2,10 +2,10 @@ import type { Event } from "@common/dto/event";
 
 import { useState } from "react";
 import { Box, Stack, Typography, Paper, Fab } from "@mui/material";
-import { Image } from "./image";
+import { Image } from "../image";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Label } from "./label";
+import { Label } from "../label";
 
 interface EventCardProps {
   event: Event;

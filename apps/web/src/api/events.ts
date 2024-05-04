@@ -5,7 +5,7 @@ import type { EventFilters } from "@common/dto/event-filters";
 import { api } from "@/api/client";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-type PartialEventFilters = Partial<EventFilters>;
+export type PartialEventFilters = Partial<EventFilters>;
 
 export const fetchEvents = async (eventFilters: PartialEventFilters) => {
   const response = await api.get<PaginationResponse<Event>>("/events", {
@@ -19,7 +19,7 @@ export const useGetEvents = (eventFilters?: PartialEventFilters) => {
   const { page, ...filters } = eventFilters || {};
 
   return useInfiniteQuery({
-    queryKey: ["events"],
+    queryKey: ["events", filters],
     queryFn: ({ pageParam }) => fetchEvents({ ...filters, page: pageParam }),
     initialPageParam: 1,
     getPreviousPageParam: (firstPage) => {
