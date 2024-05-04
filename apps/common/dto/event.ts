@@ -6,6 +6,7 @@ export interface Event {
   description?: string;
   category: EventCategory;
   location: string;
+  address: string;
   startTime: Date;
   endTime: Date;
   author: string;

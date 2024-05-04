@@ -1,5 +1,5 @@
 import type { FilterQuery, PaginateOptions } from "mongoose";
-import type { Event } from "@/domain/entity/event.js";
+import type { Event } from "@common/dto/event.js";
 import type { EventRepository } from "@/domain/repository/event-repository.js";
 import type { EventFilters } from "@common/dto/event-filters.js";
 import type { EventCreateRequest } from "@common/dto/event-create-request.js";
@@ -51,6 +51,7 @@ export class EventMongoRepository implements EventRepository {
     if (filters?.name) query.name = { $regex: filters.name, $options: "i" };
     if (filters?.category) query.category = filters.category;
     if (filters?.location) query.location = filters.location;
+    if (filters?.address) query.address = { $regex: filters.address, $options: "i" };
     if (filters?.startTime) query.startTime = { $gte: filters.startTime };
     if (filters?.endTime) query.endTime = { $lte: filters.endTime };
     if (filters?.author) query.author = filters.author;
@@ -96,6 +97,7 @@ export class EventMongoRepository implements EventRepository {
       description: event.description,
       category: event.category,
       location: event.location,
+      address: event.address,
       startTime: event.startTime,
       endTime: event.endTime,
       author: event.author.toString(),

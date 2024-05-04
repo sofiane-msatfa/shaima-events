@@ -9,6 +9,7 @@ export interface EventDocument extends Document {
   description?: string;
   category: EventCategory;
   location: string;
+  address: string;
   startTime: Date;
   endTime: Date;
   author: Types.ObjectId;
@@ -29,6 +30,7 @@ const eventSchema = new Schema<EventDocument>(
       required: true,
     },
     location: { type: String, required: false },
+    address: { type: String, required: true },
     startTime: { type: Date, required: true },
     endTime: { type: Date, required: true },
     author: {

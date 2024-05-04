@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { AccessTokenResponse } from "@common/dto/access-token-response";
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: "http://localhost:3000",
   withCredentials: true, // include cookies
 });
@@ -50,5 +50,3 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-export default api;
