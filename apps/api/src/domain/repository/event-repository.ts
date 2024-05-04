@@ -1,4 +1,4 @@
-import type { Event } from "@/domain/entity/event.js";
+import type { Event } from "@common/dto/event.js";
 import type { EventFilters } from "@common/dto/event-filters.js";
 import type { EventCreateRequest } from "@common/dto/event-create-request.js";
 import type { PaginationResponse } from "@common/dto/pagination-response.js";

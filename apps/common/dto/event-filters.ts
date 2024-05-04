@@ -6,6 +6,7 @@ export const eventFiltersSchema = paginationFiltersSchema.extend({
   name: z.string(),
   category: z.nativeEnum(EventCategory),
   location: z.string(),
+  address: z.string(),
   startTime: z.coerce.date(),
   endTime: z.coerce.date(),
   author: z.string(),

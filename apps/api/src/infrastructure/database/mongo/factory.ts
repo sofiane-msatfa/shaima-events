@@ -1,13 +1,21 @@
 import { fakerFR as faker } from "@faker-js/faker";
 import UserModel from "./model/user.js";
 import EventModel from "./model/event.js";
+import argon2 from "argon2";
 import { EventCategory } from "@common/enum/event-category.js";
 
+export async function clearDatabase() {
+  await UserModel.deleteMany({});
+  await EventModel.deleteMany({});
+}
+
 export async function createSampleUsers(count = 10) {
-  const users = Array.from({ length: count }, () => {
+  const password = await argon2.hash("secretpassword");
+
+  const users = Array.from({ length: count }, (_, i) => {
     return new UserModel({
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+      email: `user-${i}@test.com`,
+      password,
       firstname: faker.person.firstName(),
       lastname: faker.person.lastName(),
       deletedAt: null,
@@ -32,6 +40,7 @@ export async function createSampleEvents(count = 10) {
         longitude: () => faker.location.longitude().toString(),
         latitude: () => faker.location.latitude().toString(),
       }),
+      address: faker.location.streetAddress(),
       startTime: faker.date.recent(),
       endTime: faker.date.future(),
       author: faker.helpers.arrayElement(users)._id,

@@ -1,5 +1,5 @@
 import type { ResultAsync } from "neverthrow";
-import type { Event } from "@/domain/entity/event.js";
+import type { Event } from "@common/dto/event.js";
 import type { EventError } from "@/domain/error/event-error.js";
 import type { EventFilters } from "@common/dto/event-filters.js";
 import type { UserLight } from "@common/dto/user-light.js";

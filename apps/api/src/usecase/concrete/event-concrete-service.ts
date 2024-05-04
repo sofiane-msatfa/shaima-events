@@ -1,4 +1,4 @@
-import type { Event } from "@/domain/entity/event.js";
+import type { Event } from "@common/dto/event.js";
 import type { EventFilters } from "@common/dto/event-filters.js";
 import type { EventRepository } from "@/domain/repository/event-repository.js";
 import type { EventService } from "@/domain/service/event-service.js";
