@@ -1,52 +1,43 @@
-import axios from "axios";
+import axios, { type AxiosError, isAxiosError } from "axios";
 import type { AccessTokenResponse } from "@common/dto/access-token-response";
+import createAuthRefreshInterceptor from "axios-auth-refresh";
 
 export const api = axios.create({
   baseURL: "http://localhost:3000",
   withCredentials: true, // include cookies
 });
 
-export function setAccessTokenInterceptor(accessToken: string) {
-  api.interceptors.request.use(
-    (config) => {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-      return config;
-    },
-    (error) => Promise.reject(error),
-  );
-}
+async function refreshAccessToken(failedRequest: AxiosError) {
+  try {
+    const response = await api.post<AccessTokenResponse>("/auth/refresh");
+    const { accessToken } = response.data;
 
-// attention il ne faut pas uniquement se base sur le status car  peut correspondre à d'autres erreurs
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-
-    // If the error status is 401 and there is no originalRequest._retry flag,
-    // it means the token has expired and we need to refresh it
-    console.log({ axiosError: error.response });
-    if (
-      error.response.status === 401 &&
-      error.response.message === "TokenExpired" &&
-      !originalRequest._retry
-    ) {
-      originalRequest._retry = true;
-
-      try {
-        const response = await api.post<AccessTokenResponse>("/auth/refresh");
-        const { accessToken } = response.data;
-
-        localStorage.setItem("access_token", accessToken);
-
-        // Retry the original request with the new token
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-        return api(originalRequest);
-      } catch (error) {
-        // Handle refresh token error or redirect to login
-        return Promise.reject(error);
-      }
+    if (failedRequest.response) {
+      failedRequest.response.config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
+    localStorage.setItem("access_token", accessToken);
+    setClientAccessToken(accessToken);
+
+    return Promise.resolve();
+  } catch (error) {
     return Promise.reject(error);
-  },
-);
+  }
+}
+
+createAuthRefreshInterceptor(api, refreshAccessToken, {
+  statusCodes: [401],
+  shouldRefresh: isTokenExpiredError,
+  pauseInstanceWhileRefreshing: true,
+});
+
+export function setClientAccessToken(accessToken: string) {
+  api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+}
+
+export function isTokenExpiredError(error: AxiosError): boolean {
+  if (!isAxiosError(error)) return false;
+  if (!error.response) return false;
+  // TODO: un peu moche d'écrire en dur le message d'erreur
+  return error.response.status === 401 && error.response.data === "Token expired";
+}

@@ -121,6 +121,9 @@ export function input(theme: Theme) {
           },
           [`&.${inputLabelClasses.filled}`]: {
             transform: "translate(12px, 18px) scale(1)",
+            "&.MuiInputLabel-sizeSmall": {
+              transform: "translate(12px, 14px) scale(1)",
+            },
           },
           [`&.${inputLabelClasses.shrink}`]: {
             [`&.${inputLabelClasses.standard}`]: {

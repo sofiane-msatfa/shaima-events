@@ -6,7 +6,7 @@ import { Result } from "neverthrow";
 export function generateAccessToken(user: UserLight): string {
   const payload = { sub: JSON.stringify(user) };
   return jwt.sign(payload, "secret", {
-    expiresIn: "1800s",
+    expiresIn: "1800s", // 30 minutes
   });
 }
 

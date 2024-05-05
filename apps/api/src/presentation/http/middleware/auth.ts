@@ -20,7 +20,7 @@ export const isAuthenticated: RequestHandler = (req, res, next) => {
   const result = verifyAccessToken(token);
 
   if (result.isErr()) {
-    return res.status(HttpCode.UNAUTHORIZED).send(AuthenticationError.AuthorizationNotFound);
+    return res.status(HttpCode.UNAUTHORIZED).send(result.error);
   }
 
   req.headers[LIGHT_USER] = JSON.stringify(result.value);
