@@ -10,9 +10,9 @@ export default function Router() {
     {
       path: "/",
       element: (
-        <RootLayout>
+        // <RootLayout>
           <Home />
-        </RootLayout>
+        // </RootLayout>
       ),
     },
     ...commonRoutes,
