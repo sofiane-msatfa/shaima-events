@@ -7,6 +7,7 @@ import { EventToolbar } from "@/components/events/event-toolbar";
 import { useDebounceFn } from "@/hooks/use-debounce-fn";
 import { Navigate } from "react-router-dom";
 import { useCurrentUser } from "@/api/users";
+import { toast } from "sonner";
 
 Component.displayName = "EventsPage";
 
@@ -43,7 +44,7 @@ export function Component() {
   if (user.isError) {
     return <Navigate to="/500" />;
   }
-
+  
   return (
     <Container sx={{ my: 10 }}>
       <Typography component="h1" variant="h4">
