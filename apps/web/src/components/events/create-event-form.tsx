@@ -56,10 +56,6 @@ export function CreateEventForm({ open, onClose }: CreateEventFormProps) {
   const isConcertSelected = watch("category") === EventCategory.Concert;
 
   const onSubmit = handleSubmit(async (data: EventCreateRequest) => {
-    // const createRequest: EventCreateRequest = { ...data };
-    // createRequest.address = data.adresseGouv.properties.label;
-    // createRequest.location = data.adresseGouv.geometry.coordinates.join(",");
-
     const createRequest = buildEventFormValues(data);
     mutation.mutate(createRequest);
   });
