@@ -3,19 +3,21 @@ import { EventCard } from "./event-card";
 import { EventCardSkeleton } from "./event-card-skeleton";
 
 import type { Event } from "@common/dto/event";
+import type { UserLight } from "@common/dto/user-light";
 
 interface EventListProps {
   events: Event[];
   loading: boolean;
+  user: UserLight;
 }
 
-export function EventList({ events, loading }: EventListProps) {
+export function EventList({ events, loading, user }: EventListProps) {
   const renderEventSkeletons = () => {
     return Array.from({ length: 20 }).map((_, index) => <EventCardSkeleton key={index} />);
   };
 
   const renderEventCards = () => {
-    return events.map((event) => <EventCard key={event.id} event={event} />);
+    return events.map((event) => <EventCard user={user} key={event.id} event={event} />);
   };
 
   return (
