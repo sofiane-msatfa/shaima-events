@@ -1,5 +1,4 @@
-import { Types, type FilterQuery, type PaginateOptions } from "mongoose";
-import { Types, type FilterQuery, type PaginateOptions } from "mongoose";
+import { type PaginateOptions } from "mongoose";
 import type { Event } from "@common/dto/event.js";
 import type { EventRepository } from "@/domain/repository/event-repository.js";
 import type { EventFilters } from "@common/dto/event-filters.js";

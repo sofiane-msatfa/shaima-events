@@ -1,12 +1,20 @@
 import { useGetMyEvents } from "@/api/events";
 import { useInView } from "react-intersection-observer";
 import { Container, Typography } from "@mui/material";
-import { EventList } from "@/components/event-list";
 import { useEffect } from "react";
+import { EventList } from "@/components/events/event-list";
+import { useAuth } from "@/contexts/auth/use-auth";
+import { Navigate } from "react-router-dom";
 
 Component.displayName = "EventsPage";
 
 export function Component() {
+  const { user } = useAuth();
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
   const events = useGetMyEvents({ pageSize: 20 });
 
   const { ref, inView } = useInView({
@@ -27,7 +35,7 @@ export function Component() {
         Events
       </Typography>
       {allEvents.length > 0 ? (
-        <EventList events={allEvents} loading={events.isPending} />
+        <EventList user={user} events={allEvents} loading={events.isPending} />
       ) : (
         <Typography variant="body1">No events found</Typography>
       )}

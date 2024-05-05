@@ -5,6 +5,8 @@ import { EventList } from "@/components/events/event-list";
 import { useEffect, useState } from "react";
 import { EventToolbar } from "@/components/events/event-toolbar";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useAuth } from "@/contexts/auth/use-auth";
+import { Navigate } from "react-router-dom";
 
 Component.displayName = "EventsPage";
 
@@ -14,6 +16,12 @@ const defaultFilters: PartialEventFilters = {
 };
 
 export function Component() {
+  const { user } = useAuth();
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
   const [filters, setFilters] = useState<PartialEventFilters>(defaultFilters);
   const events = useGetEvents(filters);
 
@@ -42,7 +50,7 @@ export function Component() {
       </Typography>
 
       <EventToolbar filters={filters} onFiltersChange={onFiltersChange} />
-      <EventList events={allEvents} loading={events.isPending} />
+      <EventList user={user} events={allEvents} loading={events.isPending} />
 
       <div ref={ref} />
     </Container>

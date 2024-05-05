@@ -7,20 +7,14 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Label } from "../label";
 import { joinOrLeaveEvent } from "@/api/events";
-import { useAuth } from "@/contexts/auth/use-auth";
-import { Navigate } from "react-router-dom";
+import { UserLight } from "@common/dto/user-light";
 
 interface EventCardProps {
   event: Event;
+  user: UserLight
 }
 
-export function EventCard({ event }: EventCardProps) {
-  const { user } = useAuth();
-
-  if (!user) {
-    // ne devrait pas arriver car on est sous AuthGuard
-    return <Navigate to="/auth/login" replace />;
-  }
+export function EventCard({ event, user }: EventCardProps) {
 
   const [isFavorited, setIsFavorited] = useState(() => event.participants.includes(user.id));
 
@@ -48,6 +42,9 @@ export function EventCard({ event }: EventCardProps) {
       <Label variant="filled" color="info">
         {event.category}
       </Label>
+      {event.author === user.id ? (
+        <Label variant="outlined" color="primary">Organisateur</Label>
+      ) : null}
       {/* on peut rajouter des labels */}
     </Stack>
   );
