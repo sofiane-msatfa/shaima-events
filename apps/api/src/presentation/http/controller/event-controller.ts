@@ -77,17 +77,19 @@ export class EventController {
     res.status(HttpCode.OK).json(lookupResult.value);
   };
 
-  public getAllForCurrentUser: RequestHandler = asyncHandler(async (req, res, next) => {
+  public getEventsForCurrentUser: RequestHandler = asyncHandler(async (req, res, next) => {
     const { page, pageSize } = paginationFiltersSchema.parse(req.query);
 
     const currentUser = getUserLightFromRequest(req);
 
-    const events = await this.eventService.getEvents({ participants: [currentUser.id], author: currentUser.id, page, pageSize });
+    const events = await this.eventService.getEventsForUser(currentUser, { page, pageSize });
 
     if (events.isErr()) {
-      return res.status(HttpCode.INTERNAL_SERVER_ERROR).json({ error: events.error });
+      this.handleEventError(events.error, res);
+      return next();
     }
-    // TODO : handle type 
+
+    // TODO : handle type
     res.status(HttpCode.OK).json(events.value);
   });
 

@@ -1,4 +1,5 @@
 import { Types, type FilterQuery, type PaginateOptions } from "mongoose";
+import { Types, type FilterQuery, type PaginateOptions } from "mongoose";
 import type { Event } from "@common/dto/event.js";
 import type { EventRepository } from "@/domain/repository/event-repository.js";
 import type { EventFilters } from "@common/dto/event-filters.js";
@@ -9,6 +10,7 @@ import type { PaginateResult } from "mongoose";
 
 import { injectable } from "inversify";
 import EventModel from "../model/event.js";
+import { buildNonExclusiveQueryFilters } from "../utils/event-condition-builder.js";
 
 @injectable()
 export class EventMongoRepository implements EventRepository {
@@ -21,8 +23,11 @@ export class EventMongoRepository implements EventRepository {
     await EventModel.findByIdAndDelete(id);
   }
 
-  async findAll(filters?: Partial<EventFilters>): Promise<PaginationResponse<Event>> {
-    const queryFilters = this.buildEventQueryFilters(filters, '$or');
+  async findAll(
+    filters: Partial<EventFilters> = {},
+    nonExclusiveKeys: Array<keyof EventFilters> = [],
+  ): Promise<PaginationResponse<Event>> {
+    const queryFilters = buildNonExclusiveQueryFilters(filters, nonExclusiveKeys);
     const pagination = this.buildEventPagination(filters);
 
     console.log(queryFilters)
@@ -44,28 +49,6 @@ export class EventMongoRepository implements EventRepository {
     });
     if (!updatedEvent) return null;
     return this.toEventEntity(updatedEvent);
-  }
-
-  private buildEventQueryFilters(
-    filters?: Partial<EventFilters>,
-    operator: string = ''
-  ): FilterQuery<EventDocument> {
-    const query: FilterQuery<EventDocument> = {};
-
-    // filters
-    if (filters?.name) query.name = { $regex: filters.name, $options: "i" };
-    if (filters?.category) query.category = filters.category;
-    if (filters?.location) query.location = filters.location;
-    if (filters?.address) query.address = { $regex: filters.address, $options: "i" };
-    if (filters?.startTime) query.startTime = { $gte: filters.startTime };
-    if (filters?.endTime) query.endTime = { $lte: filters.endTime };
-    if (filters?.author) query[operator] = [...(query[operator] || []), { author: filters.author }];
-    if (filters?.participants) query[operator] = [...(query[operator] || []), { participants: { $in: filters.participants.map(participant => new Types.ObjectId(participant)) } }];
-    if (filters?.tags) query.tags = { $in: filters.tags };
-    if (filters?.capacityMin) query.capacity = { ...(query.capacity || {}), $gte: filters.capacityMin };
-    if (filters?.capacityMax) query.capacity = { ...(query.capacity || {}), $lte: filters.capacityMax };
-
-    return query;
   }
 
   private buildEventPagination(filters?: Partial<EventFilters>): PaginateOptions {

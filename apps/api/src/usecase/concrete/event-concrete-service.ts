@@ -17,11 +17,26 @@ export class EventConcreteService implements EventService {
   @inject(IDENTIFIER.EventRepository)
   private readonly eventRepository!: EventRepository;
 
-  async getEvents(
+  async getEventsForUser(
+    user: UserLight,
     filters: Partial<EventFilters>,
   ): Promise<ResultAsync<PaginationResponse<Event>, EventError>> {
+    const participants = filters.participants || [];
+    const userFilters = {
+      ...filters,
+      author: user.id,
+      participants: [...participants, user.id],
+    };
+
+    return this.getEvents(userFilters, ["author", "participants"]);
+  }
+
+  async getEvents(
+    filters: Partial<EventFilters>,
+    nonExclusiveKeys: Array<keyof EventFilters> = [],
+  ): Promise<ResultAsync<PaginationResponse<Event>, EventError>> {
     const eventListResult = await ResultAsync.fromPromise(
-      this.eventRepository.findAll(filters),
+      this.eventRepository.findAll(filters, nonExclusiveKeys),
       (error) => error,
     );
 
@@ -134,9 +149,10 @@ export class EventConcreteService implements EventService {
     }
 
     if (existingEvent.participants.includes(user.id)) {
-      existingEvent.participants = existingEvent.participants.filter((participant) => participant !== user.id);
-    }
-    else {
+      existingEvent.participants = existingEvent.participants.filter(
+        (participant) => participant !== user.id,
+      );
+    } else {
       existingEvent.participants.push(user.id);
     }
 

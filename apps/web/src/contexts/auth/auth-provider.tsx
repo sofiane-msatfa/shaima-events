@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AuthContext, type AuthContextType } from "./auth-context";
 import { api, setAccessTokenInterceptor } from "@/api/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { LoginRequest } from "@common/dto/login-request";
 import type { RegisterRequest } from "@common/dto/register-request";
 import type { AccessTokenResponse } from "@common/dto/access-token-response";
@@ -12,18 +12,18 @@ interface AuthProviderProps {
 }
 
 export function AuthContextProvider({ children }: AuthProviderProps) {
+  const queryClient = useQueryClient();
   const [accessToken, setAccessToken] = useState<string | null>(() => {
     return localStorage.getItem("access_token");
   });
-  const isAuthenticated = !!accessToken;
 
-  const { data: user } = useQuery({
+  const { data: user, isPending } = useQuery({
     queryKey: ["me"],
     queryFn: async () => {
       const response = await api.get<UserLight>("/users/me");
       return response.data;
     },
-    enabled: isAuthenticated,
+    enabled: !!accessToken,
   });
 
   useEffect(() => {
@@ -50,18 +50,20 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
     await api.post("/auth/logout");
     localStorage.removeItem("access_token");
     setAccessToken(null);
+    queryClient.invalidateQueries({ queryKey: ["me"] });
   };
 
   const value: AuthContextType = useMemo(
     () => ({
-      isAuthenticated,
+      isAuthenticated: !!accessToken,
+      isLoading: isPending,
       accessToken,
       register,
       login,
       logout,
-      user: user || null,
+      user: user ?? null,
     }),
-    [isAuthenticated, accessToken, user, register, login, logout],
+    [accessToken, user, isPending, register, login, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

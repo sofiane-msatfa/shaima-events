@@ -1,5 +1,5 @@
 import { useAuth } from "@/contexts/auth/use-auth";
-import { useRouter } from "@/hooks/use-router";
+import { Navigate } from "react-router-dom";
 
 interface GuestGuardProps {
   children: React.ReactNode;
@@ -7,10 +7,9 @@ interface GuestGuardProps {
 
 export function GuestGuard({ children }: GuestGuardProps) {
   const { isAuthenticated } = useAuth();
-  const router = useRouter();
 
   if (isAuthenticated) {
-    return router.replace("/events");
+    return <Navigate to="/auth/login" replace />;
   }
 
   return <>{children}</>;

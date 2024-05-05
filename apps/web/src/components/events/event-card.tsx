@@ -1,31 +1,36 @@
 import type { Event } from "@common/dto/event";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Box, Stack, Typography, Paper, Fab } from "@mui/material";
-import { Image } from "./image";
+import { Image } from "../image";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Label } from "./label";
+import { Label } from "../label";
 import { joinOrLeaveEvent } from "@/api/events";
-import { UserLight } from "@common/dto/user-light";
+import { useAuth } from "@/contexts/auth/use-auth";
+import { Navigate } from "react-router-dom";
 
 interface EventCardProps {
   event: Event;
-  user: UserLight;
 }
 
-export function EventCard({ event, user }: EventCardProps) {
+export function EventCard({ event }: EventCardProps) {
+  const { user } = useAuth();
+
+  if (!user) {
+    // ne devrait pas arriver car on est sous AuthGuard
+    return <Navigate to="/auth/login" replace />;
+  }
+
   const [isFavorited, setIsFavorited] = useState(() => event.participants.includes(user.id));
-  ;
 
   const toggleFavorite = async () => {
-    await joinOrLeaveEvent(event.id);
+    // optimistic update
     setIsFavorited((prev) => !prev);
+    const updatedEvent = await joinOrLeaveEvent(event.id);
+    // on met à jour l'état avec la valeur réelle
+    setIsFavorited(updatedEvent.participants.includes(user.id));
   };
-
-  useEffect(() => {
-    setIsFavorited(event.participants.includes(user.id));
-  }, [event.participants, user.id]);
 
   const formattedDate = new Date(event.startTime).toLocaleDateString("fr-FR", {
     month: "short",
