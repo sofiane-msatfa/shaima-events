@@ -21,10 +21,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Label } from "../label";
 import { toggleEventParticipation, useDeleteEvent } from "@/api/events";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { useBoolean } from "@/hooks/use-boolean";
-import { EditEventForm } from "./edit-event-form";
-import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import { useBoolean } from "@/hooks/use-boolean";
 import { EditEventForm } from "./edit-event-form";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -137,34 +133,6 @@ export function EventCard({ event, user }: EventCardProps) {
   );
 
   return (
-    <>
-      <Card
-        variant="outlined"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          // position: "relative",
-          boxShadow: (theme) => theme.customShadows.z4,
-          "&:hover .join-event-btn": {
-            opacity: 1,
-          },
-        }}
-      >
-        <CardHeader
-          title="Shrimp and Chorizo Paella"
-          subheader={formattedDate}
-          titleTypographyProps={{ variant: "body1", fontWeight: 500 }}
-          subheaderTypographyProps={{ variant: "body2", color: "secondary.main" }}
-        />
-        <Box sx={{ position: "relative", p: 1 }}>
-          {categoryLabel}
-
-          {!isAuthor ? favoriteButton : null}
-
-          <Image src="https://picsum.photos/300" alt="" sx={{ borderRadius: 1 }} />
-
-          {participantLabel}
-        </Box>
     <>
       <Card
         variant="outlined"
