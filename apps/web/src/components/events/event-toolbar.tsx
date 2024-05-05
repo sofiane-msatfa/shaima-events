@@ -1,10 +1,11 @@
 import type { PartialEventFilters } from "@/api/events";
-import { InputAdornment, MenuItem, Stack, TextField } from "@mui/material";
+import { Divider, InputAdornment, MenuItem, Stack, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import SearchIcon from "@mui/icons-material/Search";
 import { useCallback } from "react";
 import { EventCategory } from "@common/enum/event-category";
 import { SearchInput } from "../search-input";
+import { AddEventModal } from "./add-event-modal";
 
 interface EventToolbarProps {
   filters: PartialEventFilters;
@@ -70,6 +71,7 @@ export function EventToolbar({ filters, onFiltersChange }: EventToolbarProps) {
         spacing={2}
         width={{ sm: 1 }}
       >
+        <AddEventModal />
         <TextField
           select
           fullWidth
@@ -82,13 +84,14 @@ export function EventToolbar({ filters, onFiltersChange }: EventToolbarProps) {
           sx={{ maxWidth: { md: 200 } }}
           InputProps={{ sx: { height: 38 } }}
         >
+          {/* unfilter category */}
+          <MenuItem value={UNFILTER_CATEGORY.value}>{UNFILTER_CATEGORY.label}</MenuItem>
+          <Divider sx={{ borderStyle: "dashed" }} />
           {Object.values(EventCategory).map((category) => (
             <MenuItem key={category} value={category}>
               {category}
             </MenuItem>
           ))}
-          {/* unfilter category */}
-          <MenuItem value={UNFILTER_CATEGORY.value}>{UNFILTER_CATEGORY.label}</MenuItem>
         </TextField>
 
         <DatePicker
