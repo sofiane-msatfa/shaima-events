@@ -1,3 +1,4 @@
+import { AuthGuard } from "@/components/guards/auth-guard";
 import { RootLayout } from "@/components/layouts/root-layout";
 import { SplashScreen } from "@/components/splash-screen";
 import { Suspense } from "react";
@@ -9,10 +10,15 @@ export const eventRoutes: RouteObject[] = [
     element: (
       <Suspense fallback={<SplashScreen />}>
         <RootLayout>
-          <Outlet />
+          <AuthGuard>
+            <Outlet />
+          </AuthGuard>
         </RootLayout>
       </Suspense>
     ),
-    children: [{ index: true, lazy: () => import("@/pages/events/root") }],
+    children: [
+      { index: true, lazy: () => import("@/pages/events/root") },
+      { path: "my-events", lazy: () => import("@/pages/events/myevents") },
+    ],
   },
 ];

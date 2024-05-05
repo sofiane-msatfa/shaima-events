@@ -6,7 +6,10 @@ import type { PaginationResponse } from "@common/dto/pagination-response.js";
 export interface EventRepository {
   create(event: EventCreateRequest, authordId: string): Promise<Event>;
   delete(id: string): Promise<void>;
-  findAll(filters?: Partial<EventFilters>): Promise<PaginationResponse<Event>>;
+  findAll(
+    filters?: Partial<EventFilters>,
+    nonExclusiveKeys?: Array<keyof EventFilters>,
+  ): Promise<PaginationResponse<Event>>;
   findById(id: string): Promise<Event | null>;
   update(id: string, event: Partial<Event>): Promise<Event | null>;
 }

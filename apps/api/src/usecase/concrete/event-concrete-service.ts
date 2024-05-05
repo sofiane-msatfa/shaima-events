@@ -17,11 +17,26 @@ export class EventConcreteService implements EventService {
   @inject(IDENTIFIER.EventRepository)
   private readonly eventRepository!: EventRepository;
 
-  async getEvents(
+  async getEventsForUser(
+    user: UserLight,
     filters: Partial<EventFilters>,
   ): Promise<ResultAsync<PaginationResponse<Event>, EventError>> {
+    const participants = filters.participants || [];
+    const userFilters = {
+      ...filters,
+      author: user.id,
+      participants: [...participants, user.id],
+    };
+
+    return this.getEvents(userFilters, ["author", "participants"]);
+  }
+
+  async getEvents(
+    filters: Partial<EventFilters>,
+    nonExclusiveKeys: Array<keyof EventFilters> = [],
+  ): Promise<ResultAsync<PaginationResponse<Event>, EventError>> {
     const eventListResult = await ResultAsync.fromPromise(
-      this.eventRepository.findAll(filters),
+      this.eventRepository.findAll(filters, nonExclusiveKeys),
       (error) => error,
     );
 
@@ -111,6 +126,38 @@ export class EventConcreteService implements EventService {
 
     const updatedEvent = await ResultAsync.fromPromise(
       this.eventRepository.update(id, updateRequest),
+      (error) => error,
+    );
+
+    if (updatedEvent.isErr()) {
+      console.error(updatedEvent.error);
+      return errAsync(EventError.UpdateFailed);
+    }
+
+    if (!updatedEvent.value) {
+      return errAsync(EventError.NotFound);
+    }
+
+    return okAsync(updatedEvent.value);
+  }
+
+  async joinOrLeaveEvent(id: string, user: UserLight): Promise<ResultAsync<Event, EventError>> {
+    const existingEvent = await this.eventRepository.findById(id);
+
+    if (!existingEvent) {
+      return errAsync(EventError.NotFound);
+    }
+
+    if (existingEvent.participants.includes(user.id)) {
+      existingEvent.participants = existingEvent.participants.filter(
+        (participant) => participant !== user.id,
+      );
+    } else {
+      existingEvent.participants.push(user.id);
+    }
+
+    const updatedEvent = await ResultAsync.fromPromise(
+      this.eventRepository.update(id, existingEvent),
       (error) => error,
     );
 

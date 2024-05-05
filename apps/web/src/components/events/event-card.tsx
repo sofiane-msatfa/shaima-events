@@ -6,16 +6,30 @@ import { Image } from "../image";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Label } from "../label";
+import { joinOrLeaveEvent } from "@/api/events";
+import { useAuth } from "@/contexts/auth/use-auth";
+import { Navigate } from "react-router-dom";
 
 interface EventCardProps {
   event: Event;
 }
 
 export function EventCard({ event }: EventCardProps) {
-  const [isFavorited, setIsFavorited] = useState(false);
+  const { user } = useAuth();
 
-  const toggleFavorite = () => {
+  if (!user) {
+    // ne devrait pas arriver car on est sous AuthGuard
+    return <Navigate to="/auth/login" replace />;
+  }
+
+  const [isFavorited, setIsFavorited] = useState(() => event.participants.includes(user.id));
+
+  const toggleFavorite = async () => {
+    // optimistic update
     setIsFavorited((prev) => !prev);
+    const updatedEvent = await joinOrLeaveEvent(event.id);
+    // on met à jour l'état avec la valeur réelle
+    setIsFavorited(updatedEvent.participants.includes(user.id));
   };
 
   const formattedDate = new Date(event.startTime).toLocaleDateString("fr-FR", {

@@ -7,6 +7,7 @@ type AsyncVoidFunction = () => Promise<void>;
 
 export interface AuthContextType {
   isAuthenticated: boolean;
+  isLoading: boolean;
   accessToken: string | null;
   user: UserLight | null;
   register: (credentials: RegisterRequest) => Promise<void>;
