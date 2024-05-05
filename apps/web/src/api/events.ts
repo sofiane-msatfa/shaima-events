@@ -39,6 +39,11 @@ export const toggleEventParticipation = async (id: string) => {
   return response.data;
 };
 
+export const deleteEvent = async (id: string) => {
+  const response = await api.delete<Event>(`/events/${id}`);
+  return response.data;
+};
+
 /* ----------------------------------- get ---------------------------------- */
 
 export const useGetEvents = (eventFilters?: PartialEventFilters) => {
@@ -93,6 +98,19 @@ export const usePatchEvent = (queryClient: QueryClient) => {
     mutationFn: (eventUpdateRequestWithId: EventUpdateRequestWithId) => {
       const { id, ...updateRequest } = eventUpdateRequestWithId;
       return updateEvent(id, updateRequest);
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["events"] });
+    },
+  });
+};
+
+/* --------------------------------- delete --------------------------------- */
+
+export const useDeleteEvent = (queryClient: QueryClient) => {
+  return useMutation({
+    mutationFn: (id: string) => {
+      return deleteEvent(id);
     },
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: ["events"] });

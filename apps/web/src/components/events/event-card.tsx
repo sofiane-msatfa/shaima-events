@@ -17,12 +17,18 @@ import {
 import { Image } from "../image";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Label } from "../label";
-import { toggleEventParticipation } from "@/api/events";
+import { toggleEventParticipation, useDeleteEvent } from "@/api/events";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useBoolean } from "@/hooks/use-boolean";
 import { EditEventForm } from "./edit-event-form";
+import EditCalendarIcon from "@mui/icons-material/EditCalendar";
+import { useBoolean } from "@/hooks/use-boolean";
+import { EditEventForm } from "./edit-event-form";
+import { ConfirmDialog } from "../confirm-dialog";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface EventCardProps {
   event: Event;
@@ -30,15 +36,26 @@ interface EventCardProps {
 }
 
 export function EventCard({ event, user }: EventCardProps) {
-  const dialog = useBoolean();
-  const [isFavorited, setIsFavorited] = useState(() => event.participants.includes(user.id));
+  const editEventDialog = useBoolean();
+  const deleteEventDialog = useBoolean();
+  const queryClient = useQueryClient();
+  const deleteEvent = useDeleteEvent(queryClient);
+
+  const [isFavorited, setIsFavorited] = useState(() => {
+    return event.participants.includes(user.id);
+  });
+
+  const handleDeleteEvent = async () => {
+    deleteEvent.mutate(event.id);
+  };
+
   const isAuthor = event.author === user.id;
 
   const toggleFavorite = async () => {
-    // optimistic update
+    // Optimistic update
     setIsFavorited((prev) => !prev);
     const updatedEvent = await toggleEventParticipation(event.id);
-    // on met à jour l'état avec la valeur réelle
+    // Actual update of state with the real value
     setIsFavorited(updatedEvent.participants.includes(user.id));
   };
 
@@ -63,7 +80,6 @@ export function EventCard({ event, user }: EventCardProps) {
           Organisateur
         </Label>
       ) : null}
-      {/* on peut rajouter des labels */}
     </Stack>
   );
 
@@ -74,7 +90,6 @@ export function EventCard({ event, user }: EventCardProps) {
       spacing={1}
       sx={{ position: "absolute", zIndex: 9, bottom: 16, left: 16 }}
     >
-      {/* ajouter couleur dynamique lorsqu'on se rapproche de la limite */}
       <Label variant="filled" color="default">
         {event.participants.length} participants
       </Label>
@@ -112,16 +127,44 @@ export function EventCard({ event, user }: EventCardProps) {
 
   const authorTools = (
     <CardActions disableSpacing sx={{ mt: "auto" }}>
-      <IconButton aria-label="add to favorites" size="small" onClick={dialog.onTrue}>
+      <IconButton aria-label="add to favorites" size="small" onClick={editEventDialog.onTrue}>
         <EditCalendarIcon fontSize="inherit" />
       </IconButton>
-      <IconButton aria-label="share" size="small" color="error">
-        <DeleteOutlineIcon fontSize="inherit" />
+      <IconButton aria-label="share" size="small" color="error" onClick={deleteEventDialog.onTrue}>
+        <DeleteIcon fontSize="inherit" />
       </IconButton>
     </CardActions>
   );
 
   return (
+    <>
+      <Card
+        variant="outlined"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          // position: "relative",
+          boxShadow: (theme) => theme.customShadows.z4,
+          "&:hover .join-event-btn": {
+            opacity: 1,
+          },
+        }}
+      >
+        <CardHeader
+          title="Shrimp and Chorizo Paella"
+          subheader={formattedDate}
+          titleTypographyProps={{ variant: "body1", fontWeight: 500 }}
+          subheaderTypographyProps={{ variant: "body2", color: "secondary.main" }}
+        />
+        <Box sx={{ position: "relative", p: 1 }}>
+          {categoryLabel}
+
+          {!isAuthor ? favoriteButton : null}
+
+          <Image src="https://picsum.photos/300" alt="" sx={{ borderRadius: 1 }} />
+
+          {participantLabel}
+        </Box>
     <>
       <Card
         variant="outlined"
@@ -166,7 +209,14 @@ export function EventCard({ event, user }: EventCardProps) {
         {isAuthor ? authorTools : null}
       </Card>
 
-      <EditEventForm event={event} open={dialog.value} onClose={dialog.onFalse} />
+      <EditEventForm event={event} open={editEventDialog.value} onClose={editEventDialog.onFalse} />
+      <ConfirmDialog
+        title="Supprimer l'événement"
+        description={`Êtes-vous sûr de vouloir supprimer l'événement "${event.name}" ? Cette action est irréversible.`}
+        open={deleteEventDialog.value}
+        onClose={deleteEventDialog.onFalse}
+        onConfirm={handleDeleteEvent}
+      />
     </>
   );
 }
