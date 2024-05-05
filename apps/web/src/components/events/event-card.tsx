@@ -39,7 +39,7 @@ export function EventCard({ event, user }: EventCardProps) {
       spacing={1}
       sx={{ position: "absolute", zIndex: 9, top: 16, right: 16 }}
     >
-      <Label variant="filled" color="info">
+      <Label variant="filled" color="secondary">
         {event.category}
       </Label>
       {isAuthor ? (
@@ -122,7 +122,7 @@ export function EventCard({ event, user }: EventCardProps) {
           </Typography>x
         )} */}
 
-        <Typography variant="subtitle2" color="secondary.main">
+        <Typography variant="subtitle2" color="text.secondary">
           {formattedDate}
         </Typography>
         <Typography variant="subtitle2" color="text.secondary">

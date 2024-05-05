@@ -47,7 +47,7 @@ export function Component() {
 
   return (
     <Container sx={{ my: 10 }}>
-      <Typography component="h1" variant="h4">
+      <Typography component="h1" variant="h4" sx={{ fontWeight: "900" }}>
         Events
       </Typography>
 

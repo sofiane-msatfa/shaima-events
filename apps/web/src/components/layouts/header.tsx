@@ -67,7 +67,7 @@ export function Header() {
 
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
-              <Button key={item.name} sx={{ color: "#fff" }} component={Link} to={item.path}>
+              <Button key={item.name} sx={{ color: "#fff", fontWeight: 800 }} component={Link} to={item.path}>
                 {item.name}
               </Button>
             ))}
