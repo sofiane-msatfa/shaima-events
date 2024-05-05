@@ -12,6 +12,7 @@ export function FormInput({ name, helperText, type, ...other }: FormInputProps) 
     <Controller
       name={name}
       control={control}
+      defaultValue=''
       render={({ field, fieldState: { error } }) => (
         <TextField
           {...field}

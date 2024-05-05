@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AuthContext, type AuthContextType } from "./auth-context";
-import { api, setAccessTokenInterceptor } from "@/api/client";
+import { api, setClientAccessToken } from "@/api/client";
 import type { LoginRequest } from "@common/dto/login-request";
 import type { RegisterRequest } from "@common/dto/register-request";
 import type { AccessTokenResponse } from "@common/dto/access-token-response";
@@ -16,7 +16,7 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     if (accessToken) {
-      setAccessTokenInterceptor(accessToken);
+      setClientAccessToken(accessToken);
     }
   }, [accessToken]);
 

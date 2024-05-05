@@ -24,6 +24,7 @@ export function FormSelect({
     <Controller
       name={name}
       control={control}
+      defaultValue=''
       render={({ field, fieldState: { error } }) => (
         <TextField
           {...field}

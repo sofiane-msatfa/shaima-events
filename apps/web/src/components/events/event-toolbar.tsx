@@ -5,7 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useCallback } from "react";
 import { EventCategory } from "@common/enum/event-category";
 import { SearchInput } from "../search-input";
-import { AddEventModal } from "./add-event-modal";
+import { CreateEventButton } from "./create-event-button";
 
 interface EventToolbarProps {
   filters: PartialEventFilters;
@@ -18,6 +18,7 @@ const UNFILTER_CATEGORY = {
 };
 
 export function EventToolbar({ filters, onFiltersChange }: EventToolbarProps) {
+
   const handleChangeFilter = useCallback(
     (filterName: keyof PartialEventFilters) => (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
@@ -71,7 +72,7 @@ export function EventToolbar({ filters, onFiltersChange }: EventToolbarProps) {
         spacing={2}
         width={{ sm: 1 }}
       >
-        <AddEventModal />
+        <CreateEventButton label="Ajouter" />
         <TextField
           select
           fullWidth

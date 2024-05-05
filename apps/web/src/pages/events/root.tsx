@@ -4,14 +4,13 @@ import { Container, Typography } from "@mui/material";
 import { EventList } from "@/components/events/event-list";
 import { useEffect, useState } from "react";
 import { EventToolbar } from "@/components/events/event-toolbar";
-import { useDebounce } from "@/hooks/use-debounce";
+import { useDebounceFn } from "@/hooks/use-debounce-fn";
 import { Navigate } from "react-router-dom";
 import { useCurrentUser } from "@/api/users";
 
 Component.displayName = "EventsPage";
 
 const defaultFilters: PartialEventFilters = {
-  startTime: new Date(),
   pageSize: 20,
 };
 
@@ -24,7 +23,7 @@ export function Component() {
     threshold: 0.2,
   });
 
-  const onFiltersChange = useDebounce((filters: PartialEventFilters) => {
+  const onFiltersChange = useDebounceFn((filters: PartialEventFilters) => {
     setFilters(filters);
   }, 500);
 

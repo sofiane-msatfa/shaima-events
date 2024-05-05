@@ -13,7 +13,7 @@ interface EventListProps {
 
 export function EventList({ events, loading, user }: EventListProps) {
   const renderEventSkeletons = () => {
-    return Array.from({ length: 20 }).map((_, index) => <EventCardSkeleton key={index} />);
+    return Array.from({ length: 6 }).map((_, index) => <EventCardSkeleton key={index} />);
   };
 
   const renderEventCards = () => {

@@ -148,6 +148,11 @@ export class EventConcreteService implements EventService {
       return errAsync(EventError.NotFound);
     }
 
+    if (existingEvent.author === user.id) {
+      // Author cannot join or leave his own event
+      return okAsync(existingEvent);
+    }
+
     if (existingEvent.participants.includes(user.id)) {
       existingEvent.participants = existingEvent.participants.filter(
         (participant) => participant !== user.id,

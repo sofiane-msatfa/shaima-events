@@ -1,6 +1,6 @@
 import { useCallback, useRef } from "react";
 
-export const useDebounce = <TArgs extends unknown[], TReturn>(
+export const useDebounceFn = <TArgs extends unknown[], TReturn>(
   callback: (...args: TArgs) => TReturn,
   delay = 300,
 ) => {

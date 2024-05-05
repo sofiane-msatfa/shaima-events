@@ -13,8 +13,13 @@ export const eventRequestSchema = z.object({
   participants: z.array(z.string()),
   tags: z.array(z.string()),
   medias: z.array(z.string()),
-  capacity: z.coerce.number().int(),
-  artists: z.array(z.string()).optional(),
+  capacity: z.coerce.number().positive().int(),
+  artists: z
+    .union([z.array(z.string()), z.string()])
+    .transform((value) => {
+      return Array.isArray(value) ? value : [value];
+    })
+    .optional(),
 });
 
 export type EventRequest = z.infer<typeof eventRequestSchema>;

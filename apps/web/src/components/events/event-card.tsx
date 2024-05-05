@@ -7,7 +7,7 @@ import { Image } from "../image";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Label } from "../label";
-import { joinOrLeaveEvent } from "@/api/events";
+import { toggleEventParticipation } from "@/api/events";
 
 interface EventCardProps {
   event: Event;
@@ -21,7 +21,7 @@ export function EventCard({ event, user }: EventCardProps) {
   const toggleFavorite = async () => {
     // optimistic update
     setIsFavorited((prev) => !prev);
-    const updatedEvent = await joinOrLeaveEvent(event.id);
+    const updatedEvent = await toggleEventParticipation(event.id);
     // on met à jour l'état avec la valeur réelle
     setIsFavorited(updatedEvent.participants.includes(user.id));
   };
