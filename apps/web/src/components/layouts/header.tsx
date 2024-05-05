@@ -21,7 +21,7 @@ const drawerWidth = 240;
 const navItems = [
   { name: "Home", path: "/" },
   { name: "Events", path: "/events" },
-  { name: "My events", path: "/events/my-events" }
+  { name: "My events", path: "/events/my-events" },
 ];
 
 export function Header() {

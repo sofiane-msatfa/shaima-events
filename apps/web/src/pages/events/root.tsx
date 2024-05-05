@@ -5,8 +5,8 @@ import { EventList } from "@/components/events/event-list";
 import { useEffect, useState } from "react";
 import { EventToolbar } from "@/components/events/event-toolbar";
 import { useDebounce } from "@/hooks/use-debounce";
-import { useAuth } from "@/contexts/auth/use-auth";
 import { Navigate } from "react-router-dom";
+import { useCurrentUser } from "@/api/users";
 
 Component.displayName = "EventsPage";
 
@@ -16,15 +16,9 @@ const defaultFilters: PartialEventFilters = {
 };
 
 export function Component() {
-  const { user } = useAuth();
-
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
-
+  const user = useCurrentUser();
   const [filters, setFilters] = useState<PartialEventFilters>(defaultFilters);
   const events = useGetEvents(filters);
-
 
   const { ref, inView } = useInView({
     threshold: 0.2,
@@ -42,6 +36,14 @@ export function Component() {
 
   const allEvents = events.data?.pages.flatMap((page) => page.data) ?? [];
 
+  if (user.isPending) {
+    // loader ?
+    return null;
+  }
+
+  if (user.isError) {
+    return <Navigate to="/500" />;
+  }
 
   return (
     <Container sx={{ my: 10 }}>
@@ -50,7 +52,7 @@ export function Component() {
       </Typography>
 
       <EventToolbar filters={filters} onFiltersChange={onFiltersChange} />
-      <EventList user={user} events={allEvents} loading={events.isPending} />
+      <EventList user={user.data} events={allEvents} loading={events.isPending} />
 
       <div ref={ref} />
     </Container>

@@ -1,15 +1,12 @@
 import { createContext } from "react";
 import type { LoginRequest } from "@common/dto/login-request";
 import type { RegisterRequest } from "@common/dto/register-request";
-import type { UserLight } from "@common/dto/user-light";
 
 type AsyncVoidFunction = () => Promise<void>;
 
 export interface AuthContextType {
   isAuthenticated: boolean;
-  isLoading: boolean;
   accessToken: string | null;
-  user: UserLight | null;
   register: (credentials: RegisterRequest) => Promise<void>;
   login: (credentials: LoginRequest) => Promise<void>;
   logout: AsyncVoidFunction;

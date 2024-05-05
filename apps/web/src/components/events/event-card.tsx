@@ -1,4 +1,5 @@
 import type { Event } from "@common/dto/event";
+import type { UserLight } from "@common/dto/user-light";
 
 import { useState } from "react";
 import { Box, Stack, Typography, Paper, Fab } from "@mui/material";
@@ -7,16 +8,15 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Label } from "../label";
 import { joinOrLeaveEvent } from "@/api/events";
-import { UserLight } from "@common/dto/user-light";
 
 interface EventCardProps {
   event: Event;
-  user: UserLight
+  user: UserLight;
 }
 
 export function EventCard({ event, user }: EventCardProps) {
-
   const [isFavorited, setIsFavorited] = useState(() => event.participants.includes(user.id));
+  const isAuthor = event.author === user.id;
 
   const toggleFavorite = async () => {
     // optimistic update
@@ -42,8 +42,10 @@ export function EventCard({ event, user }: EventCardProps) {
       <Label variant="filled" color="info">
         {event.category}
       </Label>
-      {event.author === user.id ? (
-        <Label variant="outlined" color="primary">Organisateur</Label>
+      {isAuthor ? (
+        <Label variant="filled" color="primary">
+          Organisateur
+        </Label>
       ) : null}
       {/* on peut rajouter des labels */}
     </Stack>
@@ -105,7 +107,7 @@ export function EventCard({ event, user }: EventCardProps) {
     >
       <Box sx={{ position: "relative", p: 1 }}>
         {categoryLabel}
-        {favoriteButton}
+        {!isAuthor ? favoriteButton : null}
         <Image src="https://picsum.photos/300" alt="" sx={{ borderRadius: 1 }} />
       </Box>
 

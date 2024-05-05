@@ -3,7 +3,7 @@ import { EventCard } from "./event-card";
 import { EventCardSkeleton } from "./event-card-skeleton";
 
 import type { Event } from "@common/dto/event";
-import { UserLight } from "@common/dto/user-light";
+import type { UserLight } from "@common/dto/user-light";
 
 interface EventListProps {
   events: Event[];
@@ -12,8 +12,13 @@ interface EventListProps {
 }
 
 export function EventList({ events, loading, user }: EventListProps) {
-  const renderEventSkeletons = () => Array.from({ length: 20 }).map((_, index) => <EventCardSkeleton key={index} />);
-  const renderEventCards = () => events.map((event) => <EventCard user={user} key={event.id} event={event} />);
+  const renderEventSkeletons = () => {
+    return Array.from({ length: 20 }).map((_, index) => <EventCardSkeleton key={index} />);
+  };
+
+  const renderEventCards = () => {
+    return events.map((event) => <EventCard user={user} key={event.id} event={event} />);
+  };
 
   return (
     <Box

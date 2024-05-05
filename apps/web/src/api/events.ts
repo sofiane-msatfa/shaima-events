@@ -41,7 +41,7 @@ export const fetchMyEvents = async (eventFilters: PartialEventFilters) => {
 export const useGetMyEvents = (eventFilters?: PartialEventFilters) => {
   const { page, ...filters } = eventFilters || {};
   return useInfiniteQuery({
-    queryKey: ["my-events"],
+    queryKey: ["events", "me", filters],
     queryFn: ({ pageParam }) => fetchMyEvents({ ...filters, page: pageParam }),
     initialPageParam: 1,
 

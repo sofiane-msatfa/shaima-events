@@ -6,16 +6,11 @@ interface AuthGuardProps {
 }
 
 export function AuthGuard({ children }: AuthGuardProps) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
     // TODO: utiliser un dictionnaire de routes pour centraliser le tout
     return <Navigate to="/auth/login" replace />;
-  }
-
-  if (isLoading) {
-    // on s'assure que l'utilisateur est chargé avant de rendre l'enfant
-    return null;
   }
 
   return <>{children}</>;

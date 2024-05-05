@@ -1,4 +1,4 @@
-import { type PaginateOptions } from "mongoose";
+import type { PaginateOptions } from "mongoose";
 import type { Event } from "@common/dto/event.js";
 import type { EventRepository } from "@/domain/repository/event-repository.js";
 import type { EventFilters } from "@common/dto/event-filters.js";
@@ -28,8 +28,6 @@ export class EventMongoRepository implements EventRepository {
   ): Promise<PaginationResponse<Event>> {
     const queryFilters = buildNonExclusiveQueryFilters(filters, nonExclusiveKeys);
     const pagination = this.buildEventPagination(filters);
-
-    console.log(queryFilters)
 
     const events = await EventModel.paginate(queryFilters, pagination);
 
