@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Container, Stack } from "@mui/material";
 import { Header } from "./header";
 
 interface RootLayoutProps {
@@ -7,11 +7,20 @@ interface RootLayoutProps {
 
 export function RootLayout({ children }: RootLayoutProps) {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: 1 }}>
+    <>
       <Header />
-      <Box component="main" sx={{ flexGrow: 1 }}>
-        {children}
-      </Box>
-    </Box>
+      <Container component="main">
+        <Stack
+          sx={{
+            py: 12,
+            m: "auto",
+            minHeight: "100vh",
+            justifyContent: "center",
+          }}
+        >
+          {children}
+        </Stack>
+      </Container>
+    </>
   );
 }
