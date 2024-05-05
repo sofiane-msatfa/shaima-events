@@ -8,7 +8,7 @@ export const eventUpdateRequestSchema = eventRequestSchema.partial().superRefine
       return ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "artists is required for Concert category",
-        path: ctx.path,
+        path: ["artists"],
       });
     }
   }

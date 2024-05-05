@@ -2,12 +2,27 @@ import type { Event } from "@common/dto/event";
 import type { UserLight } from "@common/dto/user-light";
 
 import { useState } from "react";
-import { Box, Stack, Typography, Paper, Fab } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Typography,
+  Fab,
+  IconButton,
+  Divider,
+  Card,
+  CardHeader,
+  CardActions,
+  CardContent,
+} from "@mui/material";
 import { Image } from "../image";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Label } from "../label";
 import { toggleEventParticipation } from "@/api/events";
+import EditCalendarIcon from "@mui/icons-material/EditCalendar";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { useBoolean } from "@/hooks/use-boolean";
+import { EditEventForm } from "./edit-event-form";
 
 interface EventCardProps {
   event: Event;
@@ -15,6 +30,7 @@ interface EventCardProps {
 }
 
 export function EventCard({ event, user }: EventCardProps) {
+  const dialog = useBoolean();
   const [isFavorited, setIsFavorited] = useState(() => event.participants.includes(user.id));
   const isAuthor = event.author === user.id;
 
@@ -56,11 +72,11 @@ export function EventCard({ event, user }: EventCardProps) {
       direction="row"
       alignItems="center"
       spacing={1}
-      sx={{ position: "absolute", zIndex: 9, bottom: 16, right: 16 }}
+      sx={{ position: "absolute", zIndex: 9, bottom: 16, left: 16 }}
     >
       {/* ajouter couleur dynamique lorsqu'on se rapproche de la limite */}
       <Label variant="filled" color="default">
-        {event.participants.length} / {event.capacity}
+        {event.participants.length} participants
       </Label>
     </Stack>
   );
@@ -94,44 +110,63 @@ export function EventCard({ event, user }: EventCardProps) {
     </Fab>
   );
 
+  const authorTools = (
+    <CardActions disableSpacing sx={{ mt: "auto" }}>
+      <IconButton aria-label="add to favorites" size="small" onClick={dialog.onTrue}>
+        <EditCalendarIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton aria-label="share" size="small" color="error">
+        <DeleteOutlineIcon fontSize="inherit" />
+      </IconButton>
+    </CardActions>
+  );
+
   return (
-    <Paper
-      variant="outlined"
-      sx={{
-        position: "relative",
-        boxShadow: (theme) => theme.customShadows.z4,
-        "&:hover .join-event-btn": {
-          opacity: 1,
-        },
-      }}
-    >
-      <Box sx={{ position: "relative", p: 1 }}>
-        {categoryLabel}
-        {!isAuthor ? favoriteButton : null}
-        <Image src="https://picsum.photos/300" alt="" sx={{ borderRadius: 1 }} />
-      </Box>
+    <>
+      <Card
+        variant="outlined"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          // position: "relative",
+          boxShadow: (theme) => theme.customShadows.z4,
+          "&:hover .join-event-btn": {
+            opacity: 1,
+          },
+        }}
+      >
+        <CardHeader
+          title="Shrimp and Chorizo Paella"
+          subheader={formattedDate}
+          titleTypographyProps={{ variant: "body1", fontWeight: 500 }}
+          subheaderTypographyProps={{ variant: "body2", color: "secondary.main" }}
+        />
+        <Box sx={{ position: "relative", p: 1 }}>
+          {categoryLabel}
 
-      <Stack spacing={0} sx={{ px: 1.5, pb: 2 }}>
-        <Typography variant="subtitle1" textTransform="capitalize">
-          {event.name}
-        </Typography>
+          {!isAuthor ? favoriteButton : null}
 
-        {/* {event.description && (
-          <Typography variant="body2" color="text.secondary">
-            {event.description}
-          </Typography>x
-        )} */}
+          <Image src="https://picsum.photos/300" alt="" sx={{ borderRadius: 1 }} />
 
-        <Typography variant="subtitle2" color="secondary.main">
-          {formattedDate}
-        </Typography>
-        <Typography variant="subtitle2" color="text.secondary">
-          {/* mettre l'adresse réelle */}
-          {event.address}
-        </Typography>
-      </Stack>
+          {participantLabel}
+        </Box>
 
-      {participantLabel}
-    </Paper>
+        <CardContent sx={{ pt: 1 }}>
+          <Stack direction="column" spacing={1}>
+            <Typography variant="subtitle2" color="text.secondary" fontWeight={400}>
+              {event.address}
+            </Typography>
+            <Divider />
+            <Typography variant="subtitle2" color="text.secondary">
+              {event.description}
+            </Typography>
+          </Stack>
+        </CardContent>
+
+        {isAuthor ? authorTools : null}
+      </Card>
+
+      <EditEventForm event={event} open={dialog.value} onClose={dialog.onFalse} />
+    </>
   );
 }
