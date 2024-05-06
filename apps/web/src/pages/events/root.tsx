@@ -43,7 +43,7 @@ export function Component() {
   if (user.isError) {
     return <Navigate to="/500" />;
   }
-
+  
   return (
     <Container sx={{ my: 10 }}>
       <Typography component="h1" variant="h4">

@@ -20,6 +20,7 @@ import { usePostEvent } from "@/api/events";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { buildEventFormValues } from "@/utils/event-form";
+import { toast } from "sonner";
 
 interface CreateEventFormProps {
   open: boolean;
@@ -58,6 +59,7 @@ export function CreateEventForm({ open, onClose }: CreateEventFormProps) {
   const onSubmit = handleSubmit(async (data: EventCreateRequest) => {
     const createRequest = buildEventFormValues(data);
     mutation.mutate(createRequest);
+    toast.success("Event créé avec succès");
   });
 
   return (

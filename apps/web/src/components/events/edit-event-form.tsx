@@ -20,6 +20,7 @@ import { EventForm } from "./event-form";
 import { usePatchEvent } from "@/api/events";
 import { useQueryClient } from "@tanstack/react-query";
 import { buildEventFormValues } from "@/utils/event-form";
+import { toast } from "sonner";
 
 interface EditEventFormProps {
   event: Event;
@@ -47,6 +48,7 @@ export function EditEventForm({ event, open, onClose }: EditEventFormProps) {
 
   const onSubmit = handleSubmit(async (data: EventUpdateRequest) => {
     mutation.mutate({ id: event.id, ...data });
+    toast.success("Event mis à jour avec succès");
     onClose();
   });
 

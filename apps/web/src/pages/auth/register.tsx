@@ -16,6 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 Component.displayName = "RegisterPage";
 
@@ -54,8 +55,7 @@ export function Component() {
       router.replace("/auth/login");
     } catch (err) {
       console.error(err);
-      // toast ?
-      alert("An error occurred");
+      toast.error("Une erreur s'est produite");
     }
   });
 
