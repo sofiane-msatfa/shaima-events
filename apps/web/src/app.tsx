@@ -11,6 +11,7 @@ import { ThemeProvider } from "./theme/theme-provider";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { fr } from "date-fns/locale/fr";
+import { Toaster } from "sonner";
 
 export default function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -29,6 +30,7 @@ export default function App() {
             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fr}>
               <RouterProvider router={router} />
               <ReactQueryDevtools />
+              <Toaster />
             </LocalizationProvider>
           </ThemeProvider>
         </SettingsContextProvider>

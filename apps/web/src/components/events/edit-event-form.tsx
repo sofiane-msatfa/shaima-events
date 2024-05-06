@@ -47,11 +47,8 @@ export function EditEventForm({ event, open, onClose }: EditEventFormProps) {
   const isConcertSelected = watch("category") === EventCategory.Concert;
 
   const onSubmit = handleSubmit(async (data: EventUpdateRequest) => {
-    console.log('ok')
-    toast.success('Event has been updated')
-
     mutation.mutate({ id: event.id, ...data });
-    
+    toast.success("Event mis à jour avec succès");
     onClose();
   });
 

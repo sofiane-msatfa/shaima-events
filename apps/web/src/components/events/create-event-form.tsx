@@ -57,9 +57,9 @@ export function CreateEventForm({ open, onClose }: CreateEventFormProps) {
   const isConcertSelected = watch("category") === EventCategory.Concert;
 
   const onSubmit = handleSubmit(async (data: EventCreateRequest) => {
-    toast.success('Event has been created')
     const createRequest = buildEventFormValues(data);
     mutation.mutate(createRequest);
+    toast.success("Event créé avec succès");
   });
 
   return (

@@ -55,13 +55,7 @@ export function Component() {
       router.replace("/auth/login");
     } catch (err) {
       console.error(err);
-      // toast ?
-      toast('An error occurred', {
-        action: {
-          label: 'X',
-          onClick: () => {}
-        },
-      })
+      toast.error("Une erreur s'est produite");
     }
   });
 

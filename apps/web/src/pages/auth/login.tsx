@@ -4,7 +4,7 @@ import { loginRequestSchema, type LoginRequest } from "@common/dto/login-request
 import { useAuth } from "@/contexts/auth/use-auth";
 import { useRouter } from "@/hooks/use-router";
 import { Avatar, Box, Button, Container, Grid, TextField, Typography } from "@mui/material";
-import { toast } from 'sonner'
+import { toast } from "sonner";
 
 Component.displayName = "LoginPage";
 
@@ -26,12 +26,7 @@ export function Component() {
       router.replace("/");
     } catch (err) {
       console.error(err);
-      toast('Event has been created', {
-        action: {
-          label: 'X',
-          onClick: () => {}
-        },
-      })
+      toast.error("Une erreur s'est produite");
     }
   });
 
