@@ -18,6 +18,7 @@ export interface EventDocument extends Document {
   medias: string[];
   capacity: number;
   artists?: string[];
+  illustration: string;
 }
 
 const eventSchema = new Schema<EventDocument>(
@@ -48,6 +49,7 @@ const eventSchema = new Schema<EventDocument>(
         return this.category === EventCategory.Concert;
       },
     },
+    illustration: { type: String, required: true },
   },
   { timestamps: true },
 );

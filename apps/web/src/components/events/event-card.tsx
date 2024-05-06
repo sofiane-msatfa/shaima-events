@@ -157,7 +157,7 @@ export function EventCard({ event, user }: EventCardProps) {
 
           {!isAuthor ? favoriteButton : null}
 
-          <Image src="https://picsum.photos/300" alt="" sx={{ borderRadius: 1 }} />
+          <Image src={event.illustration} alt="" sx={{ borderRadius: 1 }} />
 
           {participantLabel}
         </Box>

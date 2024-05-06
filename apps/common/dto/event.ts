@@ -15,4 +15,5 @@ export interface Event {
   medias: string[];
   capacity: number;
   artists?: string[];
+  illustration: string;
 }

@@ -52,6 +52,10 @@ export function EventForm({ isConcertSelected }: EventFormProps) {
       )}
 
       <Grid item xs={12}>
+        <FormInput name="illustration" label="Illustration" size="small" />
+      </Grid>
+
+      <Grid item xs={12}>
         <FormInput name="description" label="Description" size="small" multiline rows={3} />
       </Grid>
     </Grid>

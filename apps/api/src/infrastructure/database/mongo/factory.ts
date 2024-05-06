@@ -45,6 +45,7 @@ export async function createSampleEvents(count = 10) {
       endTime: faker.date.future(),
       author: faker.helpers.arrayElement(users)._id,
       capacity: faker.number.int({ min: 1, max: 500 }),
+      illustration: faker.image.url()
     });
   });
 

@@ -91,6 +91,7 @@ export class EventMongoRepository implements EventRepository {
       medias: event.medias,
       capacity: event.capacity,
       artists: event.artists,
+      illustration: event.illustration,
     };
   }
 }

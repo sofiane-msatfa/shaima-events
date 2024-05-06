@@ -20,6 +20,7 @@ export const eventRequestSchema = z.object({
       return Array.isArray(value) ? value : [value];
     })
     .optional(),
+  illustration: z.string().url(),
 });
 
 export type EventRequest = z.infer<typeof eventRequestSchema>;
