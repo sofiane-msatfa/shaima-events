@@ -17,23 +17,23 @@ declare module "@mui/material/styles/createPalette" {
 
 export const grey = {
   0: "#FFFFFF",
-  100: "#F9FAFB",
-  200: "#F4F6F8",
-  300: "#DFE3E8",
-  400: "#C4CDD5",
-  500: "#919EAB",
-  600: "#637381",
-  700: "#454F5B",
-  800: "#212B36",
-  900: "#161C24",
+  100: "#DEDEDE",
+  200: "#BCBCBC",
+  300: "#A2A2A2",
+  400: "#8A8A8A",
+  500: "#727272",
+  600: "#5A5A5A",
+  700: "#424242",
+  800: "#2A2A2A",
+  900: "#121212"
 };
 
 export const primary = {
-  lighter: "#C8FAD6",
-  light: "#5BE49B",
-  main: "#00A76F",
-  dark: "#007867",
-  darker: "#004B50",
+  lighter: "#8582ED",
+  light: "#5D58ED",
+  main: "#3730F0",
+  dark: "#2924B3",
+  darker: "#171466",
   contrastText: "#FFFFFF",
 };
 
@@ -135,8 +135,8 @@ export function createPalette(mode: PaletteMode) {
     mode: "dark",
     text: {
       primary: "#FFFFFF",
-      secondary: grey[500],
-      disabled: grey[600],
+      secondary: grey[300],
+      disabled: grey[700],
     },
     background: {
       paper: grey[800],

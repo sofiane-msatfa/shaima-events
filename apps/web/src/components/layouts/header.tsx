@@ -49,13 +49,23 @@ export function Header() {
 
   return (
     <>
-      <AppBar>
+      <AppBar
+        sx={{
+          backgroundColor: "background.default",
+          boxShadow: (theme) => theme.customShadows.z4,
+        }}
+      >
         <Toolbar disableGutters component="nav">
           <Container sx={{ height: 1 }}>
             <Stack direction="row" spacing={2} sx={{ flexGrow: 1 }} justifyContent="space-between">
               <Box>
                 {navItems.map((item) => (
-                  <Button key={item.name} sx={{ color: "#fff" }} component={Link} to={item.path}>
+                  <Button
+                    key={item.name}
+                    sx={{ color: "text.primary" }}
+                    component={Link}
+                    to={item.path}
+                  >
                     {item.name}
                   </Button>
                 ))}

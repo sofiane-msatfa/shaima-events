@@ -8,7 +8,7 @@ export function ToggleThemeButton() {
 
   return (
     <IconButton onClick={toggleThemeMode} color="inherit">
-      {themeMode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
+      {themeMode === "dark" ? <LightModeIcon color="action" /> : <DarkModeIcon color="action"/>}
     </IconButton>
   );
 }

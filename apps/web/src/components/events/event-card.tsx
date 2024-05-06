@@ -147,9 +147,12 @@ export function EventCard({ event, user }: EventCardProps) {
         }}
       >
         <CardHeader
-          title="Shrimp and Chorizo Paella"
+          title={
+            <Typography variant="body1" fontWeight={500} textTransform="capitalize">
+              {event.name}
+            </Typography>
+          }
           subheader={formattedDate}
-          titleTypographyProps={{ variant: "body1", fontWeight: 500 }}
           subheaderTypographyProps={{ variant: "body2", color: "secondary.main" }}
         />
         <Box sx={{ position: "relative", p: 1 }}>
