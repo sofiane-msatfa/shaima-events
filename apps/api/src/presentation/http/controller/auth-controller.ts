@@ -100,23 +100,19 @@ export class AuthController {
   private handleAuthenticationError = (error: AuthenticationError, res: Response): Response => {
     switch (error) {
       case AuthenticationError.EmailAlreadyExists:
+      case AuthenticationError.AuthorizationNotFound:
+      case AuthenticationError.Unauthorized:
+      case AuthenticationError.UserNotFound:
+      case AuthenticationError.InvalidRefreshToken:
         // avoid leaking information about existing users
         // alternative: captcha on the frontend
         return res.status(HttpCode.UNAUTHORIZED).send("Unauthorized");
       case AuthenticationError.UnsupportedIdentifier:
         return res.status(HttpCode.BAD_REQUEST).send("Unsupported identifier");
-      case AuthenticationError.AuthorizationNotFound:
-        return res.status(HttpCode.UNAUTHORIZED).send("Unauthorized");
-      case AuthenticationError.Unauthorized:
-        return res.status(HttpCode.UNAUTHORIZED).send("Unauthorized");
-      case AuthenticationError.UserNotFound:
-        return res.status(HttpCode.NOT_FOUND).send("User not found");
       case AuthenticationError.UserCreationFailed:
         return res.status(HttpCode.INTERNAL_SERVER_ERROR).send("User creation failed");
       case AuthenticationError.TokenExpired:
         return res.status(HttpCode.UNAUTHORIZED).send("TokenExpired");
-      case AuthenticationError.InvalidRefreshToken:
-        return res.status(HttpCode.UNAUTHORIZED).send("Unauthorized");
     }
   };
 }
