@@ -41,6 +41,7 @@ export function Image({ ratio, src, alt, sx, ...props }: ImageProps) {
         component="img"
         src={src}
         alt={alt}
+        loading="lazy"
         sx={{
           top: 0,
           width: 1,

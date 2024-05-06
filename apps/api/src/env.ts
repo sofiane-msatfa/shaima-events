@@ -10,6 +10,8 @@ export const env = createEnv({
     PORT: NUMBER.int().default(3000),
     MONGODB_URI: STRING.url(),
     ENABLE_SWAGGER: BOOLEAN.default("false"),
+    ACCESS_TOKEN_SECRET: STRING,
+    REFRESH_TOKEN_SECRET: STRING,
     REFRESH_TOKEN_EXPIRATION_IN_MS: NUMBER.int().default(1000 * 60 * 60 * 24 * 7), // 7 days
   },
   runtimeEnv: process.env,
